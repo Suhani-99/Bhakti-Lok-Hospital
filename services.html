@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhakti Lok Hospital | Services</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <h1>Bhakti Lok Hospital</h1>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html" class="active">Services</a></li>
+            <li><a href="gallery.html">Photo Gallery</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+        <div class="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <header class="page-header services-header">
+        <div class="header-content">
+            <h2>Our Services</h2>
+            <p>Comprehensive medical solutions tailored to your needs.</p>
+        </div>
+    </header>
+
+    <section id="service-menu" class="section-padding">
+        <div class="container">
+            <div class="section-title">
+                <h2>Select a Service</h2>
+                <div class="line"></div>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-block">
+                    <i class="fas fa-procedures"></i>
+                    <h3>Admission</h3>
+                    <p>In-patient admission procedure and ward allocation.</p>
+                </div>
+
+                <div class="service-block active-service" onclick="startOPDFlow()">
+                    <i class="fas fa-notes-medical"></i>
+                    <h3>OPD Registration</h3>
+                    <p>Book an appointment with our specialists.</p>
+                    <span class="click-instruction">Click to Book</span>
+                </div>
+
+                <div class="service-block">
+                    <i class="fas fa-syringe"></i>
+                    <h3>Surgery</h3>
+                    <p>Operation theatre scheduling and pre-op details.</p>
+                </div>
+
+                <div class="service-block">
+                    <i class="fas fa-file-medical-alt"></i>
+                    <h3>Discharge</h3>
+                    <p>Billing clearance and discharge summary.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="opd-flow-container" class="container section-padding" style="display: none;">
+        
+        <div id="step-1-form" class="flow-step">
+            <div class="section-title">
+                <h2>OPD Registration Form</h2>
+                <p>Please fill in patient details</p>
+                <div class="line"></div>
+            </div>
+            <form id="patientForm" onsubmit="handleFormSubmit(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="p_name" required placeholder="e.g. Rahul Kumar">
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="p_age" required placeholder="e.g. 30">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="tel" id="p_contact" required placeholder="9876543210">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Address</label>
+                        <input type="text" id="p_address" required placeholder="Full Address">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Previous Medical History</label>
+                        <textarea id="p_history" rows="2" placeholder="Any past surgeries or major illnesses?"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Current Medication (If any)</label>
+                        <textarea id="p_meds" rows="2" placeholder="List medicines you are currently taking"></textarea>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Current Symptoms</label>
+                        <textarea id="p_symptoms" rows="3" required placeholder="Describe what you are feeling..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top: 20px; width: 100%;">Proceed to Doctor Selection</button>
+            </form>
+        </div>
+
+        <div id="step-2-doctors" class="flow-step" style="display: none;">
+            <div class="section-title">
+                <h2>Select a Doctor</h2>
+                <p>Choose a specialist based on your needs</p>
+                <div class="line"></div>
+            </div>
+            <div id="doctor-grid" class="doctor-grid">
+                </div>
+        </div>
+
+        <div id="step-3-scheduler" class="flow-step" style="display: none;">
+            <div class="section-title">
+                <h2>Schedule Appointment</h2>
+                <p>Select a date and time slot</p>
+                <div class="line"></div>
+            </div>
+            
+            <div class="scheduler-container">
+                <div class="date-selection">
+                    <label>Select Date:</label>
+                    <input type="date" id="appointment-date" onchange="loadTimeSlots()">
+                </div>
+
+                <div class="slots-area">
+                    <h4>Available Time Slots:</h4>
+                    <div id="time-slots" class="slots-grid">
+                        <p class="text-muted">Please select a date first.</p>
+                    </div>
+                </div>
+
+                <button id="confirm-slot-btn" class="btn-primary" disabled onclick="goToSummary()">Review Booking</button>
+            </div>
+        </div>
+
+        <div id="step-4-summary" class="flow-step" style="display: none;">
+            <div class="section-title">
+                <h2>Booking Overview</h2>
+                <div class="line"></div>
+            </div>
+            <div class="summary-card">
+                <h3>Patient Details</h3>
+                <p><strong>Name:</strong> <span id="sum-name"></span></p>
+                <p><strong>Symptoms:</strong> <span id="sum-symptoms"></span></p>
+                
+                <hr>
+                
+                <h3>Appointment Details</h3>
+                <p><strong>Doctor:</strong> <span id="sum-doc"></span></p>
+                <p><strong>Specialization:</strong> <span id="sum-spec"></span></p>
+                <p><strong>Date:</strong> <span id="sum-date"></span></p>
+                <p><strong>Time:</strong> <span id="sum-time"></span></p>
+                
+                <hr>
+                
+                <div class="total-fee">
+                    <span>Consultation Fee:</span>
+                    <span class="price">₹200</span>
+                </div>
+
+                <button class="btn-primary" onclick="processPayment()">Proceed to Pay</button>
+            </div>
+        </div>
+
+        <div id="step-5-success" class="flow-step" style="display: none; text-align: center;">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>Booking Confirmed!</h2>
+            <p>Your appointment has been successfully booked.</p>
+            <div class="ticket">
+                <p><strong>Transaction ID:</strong> <span id="trans-id">TXN123456</span></p>
+                <p>Please arrive 15 minutes before your time slot.</p>
+            </div>
+            <button class="btn-primary" onclick="location.reload()">Back to Services</button>
+        </div>
+
+    </div>
+
+    <div id="doc-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div class="modal-body">
+                <img id="modal-img" src="" alt="Doctor">
+                <h3 id="modal-name"></h3>
+                <p class="highlight" id="modal-spec"></p>
+                <p id="modal-desc"></p>
+                <button class="btn-primary" onclick="selectDoctorFromModal()">Select & Schedule</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Bhakti Lok Hospital</h3>
+                <p>Dedicated to providing the best medical care with trust and reliability.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Find Us</h3>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.066!2d77.123!3d28.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDM2JzAwLjAiTiA3N8KwMDcnMTIuMCJF!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>© 2024 Bhakti Lok Hospital. All Rights Reserved.</p></div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

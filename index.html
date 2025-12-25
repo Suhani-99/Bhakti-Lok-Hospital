@@ -41,48 +41,65 @@
             <i class="fas fa-bars"></i>
         </div>
     </nav>
+        <div class="news-ticker-container">
+        <div class="ticker-title">Updates</div>
+        <div class="ticker-wrapper">
+            <div class="ticker-content">
+                <span><i class="fas fa-bullhorn"></i> <strong>OPD Registration Open:</strong> Walk-ins accepted from 10 AM to 8 PM.</span>
+                <span class="tick-divider">|</span>
+                <span><i class="fas fa-phone-alt"></i> <strong>Emergency:</strong> Call 077380 40157 for 24/7 Ambulance Support.</span>
+                <span class="tick-divider">|</span>
+                <span><i class="fas fa-user-md"></i> <strong>Dr. Mansi Shanghavi:</strong> Available Mon-Sat (11 AM - 2 PM).</span>
+                <span class="tick-divider">|</span>
+                <span><a href="services.html" style="color: yellow; text-decoration: underline;">Click Here for Online OPD Booking</a></span>
+            </div>
+        </div>
+    </div>
 
-    <header class="hero-slider">
-        <div class="slides-container">
+    <header class="hero-slider-container">
+        <div class="slider-wrapper" id="sliderWrapper">
             
-            <div class="slide fade">
+            <div class="slide-item">
                 <img src="images/home-page.png" alt="Welcome to Bhakti Lok">
                 <div class="hero-text">
                     <h2>Your Health, Our Devotion</h2>
                     <p>Experience World-Class Healthcare</p>
+                    <a href="services.html" class="btn-primary pulse-btn">OPD Registration</a>
                 </div>
             </div>
 
-            <div class="slide fade">
+            <div class="slide-item">
                 <img src="images/hospital-outside.png" alt="Hospital Exterior"> 
                 <div class="hero-text">
                     <h2>24/7 Emergency Center</h2>
                     <p>Always Open, Always Ready</p>
+                    <a href="contact.html" class="btn-primary">Emergency Contact</a>
                 </div>
             </div>
 
-            <div class="slide fade">
-                <img src="images/reception.png" alt="Reception Area">
+            <div class="slide-item">
+                <img src="images/main-doct-office.png" alt="Doctor Consultation Room">
                 <div class="hero-text">
-                    <h2>Patient-Centric Care</h2>
-                    <p>Comfort and Efficiency from the Moment You Arrive</p>
+                    <h2>Expert Consultation</h2>
+                    <p>Personalized Care in a Comfortable Setting</p>
                 </div>
             </div>
 
-            <div class="slide fade">
-                <img src="images/dr-mansi.png" alt="Expert Doctors">
+            <div class="slide-item">
+                <img src="images/ward.png" alt="Patient Ward">
                 <div class="hero-text">
-                    <h2>Expert Specialists</h2>
-                    <p>Dr. Mansi Shanghavi - Gynaecologist & Obstetrician</p>
+                    <h2>Hygienic Wards</h2>
+                    <p>Clean, Airy, and Patient-Friendly Rooms</p>
                 </div>
             </div>
 
         </div>
+
+        <button class="slider-btn prev-btn" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="slider-btn next-btn" onclick="moveSlide(1)">&#10095;</button>
         
-        <div class="hero-overlay-content">
-            <a href="services.html" class="btn-primary pulse-btn">OPD Registration</a>
-        </div>
     </header>
+
 <section class="home-about section-padding">
         <div class="container">
             <div class="about-grid-new">
@@ -140,34 +157,64 @@
         </div>
     </section>
 
-    <section class="facilities section-padding bg-light">
+    <section class="facilities-section section-padding">
         <div class="container">
-            <div class="section-title">
-                <h2>Our Facilities</h2>
-                <p>Comprehensive care under one roof</p>
-                <div class="line"></div>
+            <div class="section-header-center">
+                <h2>World-Class Facilities</h2>
+                <div class="center-line"></div>
+                <p>We provide comprehensive medical infrastructure under one roof.</p>
             </div>
+
             <div class="facilities-grid">
-                <div class="facility-card">
+                
+                <div class="facility-box">
+                    <i class="fas fa-procedures"></i>
+                    <h4>Advanced OT</h4>
+                    <p>Modular Operation Theatre with HEPA filters for infection-free surgeries.</p>
+                </div>
+
+                <div class="facility-box">
+                    <i class="fas fa-heartbeat"></i>
+                    <h4>ICU & NICU</h4>
+                    <p>Critical care units with ventilators and 24/7 monitoring systems.</p>
+                </div>
+
+                <div class="facility-box">
+                    <i class="fas fa-baby-carriage"></i>
+                    <h4>Maternity Wing</h4>
+                    <p>Specialized labor rooms and post-natal care for mother & child.</p>
+                </div>
+
+                <div class="facility-box">
+                    <i class="fas fa-x-ray"></i>
+                    <h4>Diagnostics</h4>
+                    <p>In-house Digital X-Ray, Pathology Lab, and Sonography services.</p>
+                </div>
+
+                <div class="facility-box">
+                    <i class="fas fa-pills"></i>
+                    <h4>24/7 Pharmacy</h4>
+                    <p>Well-stocked pharmacy with home delivery options for nearby areas.</p>
+                </div>
+
+                <div class="facility-box">
                     <i class="fas fa-ambulance"></i>
-                    <h3>Emergency & ICU</h3>
-                    <p>Ground floor ICU for rapid response and 24hr ambulance support.</p>
+                    <h4>Ambulance</h4>
+                    <p>Cardiac ambulance available round the clock for emergencies.</p>
                 </div>
-                <div class="facility-card">
-                    <i class="fas fa-stethoscope"></i>
-                    <h3>Specialized OPDs</h3>
-                    <p>OPD 1 for General Physicians & OPD 2 dedicated to Gynaecology.</p>
+
+                <div class="facility-box">
+                    <i class="fas fa-user-nurse"></i>
+                    <h4>Nursing Care</h4>
+                    <p>Experienced and compassionate nursing staff available 24x7.</p>
                 </div>
-                <div class="facility-card">
-                    <i class="fas fa-flask"></i>
-                    <h3>Pathology & Pharmacy</h3>
-                    <p>In-house testing and medicine availability for faster treatment.</p>
+
+                <div class="facility-box">
+                    <i class="fas fa-utensils"></i>
+                    <h4>Canteen</h4>
+                    <p>Hygienic and nutritious food provided for all in-patients.</p>
                 </div>
-                <div class="facility-card">
-                    <i class="fas fa-bed"></i>
-                    <h3>Comfortable Wards</h3>
-                    <p>Sharing and Deluxe rooms on the 2nd floor; Separate Male/Female wards.</p>
-                </div>
+
             </div>
         </div>
     </section>
@@ -176,30 +223,77 @@
         <div class="footer-container">
             <div class="footer-col">
                 <h3>Bhakti Lok Hospital</h3>
-                <p>Dedicated to providing the best medical care with trust and reliability.</p>
-            </div>
-            <div class="footer-col">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                </ul>
+                <p>Dedicated to providing the best medical care.</p>
+                <br>
+                <div style="width: 100%; height: 150px; border: 2px solid rgba(255,255,255,0.2); border-radius: 5px; overflow: hidden;">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=Bhaktilok+Hospital+Mira+Road&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        loading="lazy">
+                    </iframe>
+                </div>
             </div>
             <div class="footer-col">
                 <h3>Find Us</h3>
-                <p>NH School Rd, Bharti Nagar,<br>Mira Road East, Mira Bhayandar,<br>Maharashtra 401107</p>
+                <p><strong>Address:</strong><br>NH School Rd, Bharti Nagar, <br>Mira Road East, Mumbai - 401107</p>
                 <p><strong>Phone:</strong> 077380 40157</p>
-                <div class="map-container" style="margin-top: 15px;">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3766.304040994194!2d72.8596696!3d19.2690943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b0e608035fa3%3A0xc3647167623916!2sNH%20School%20Rd%2C%20Bharti%20Nagar%2C%20Mira%20Road%20East%2C%20Mira%20Bhayandar%2C%20Maharashtra%20401107!5e0!3m2!1sen!2sin!4v1703491234567!5m2!1sen!2sin" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                </div>
+                <br>
+                <a href="opd-booking.html" class="btn-small">Book Appointment</a>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2024 Bhakti Lok Hospital. All Rights Reserved.</p>
-        </div>
+        <div class="footer-bottom"><p>© 2024 Bhakti Lok Hospital.</p></div>
     </footer>
-
     <script src="script.js"></script>
+    <div id="promoPopup" class="popup-overlay">
+        <div class="popup-content mini-popup">
+            <button class="close-btn" onclick="closePopup()">&times;</button>
+            
+            <div class="popup-header">
+                <h3><i class="fas fa-user-nurse"></i> Need Help?</h3>
+            </div>
+            
+            <div class="popup-body">
+                <p style="margin: 0 0 10px 0; font-size: 0.9rem; color: #555;">
+                    24/7 Emergency, Pharmacy & Lab are open.
+                </p>
+                <a href="tel:07738040157" class="btn-full" style="padding: 8px; font-size: 0.85rem;">
+                    <i class="fas fa-phone-alt"></i> Call 077380 40157
+                </a>
+            </div>
+        </div>
+    </div>
+    <button class="chat-toggle-btn" onclick="toggleChat()">
+        <i class="fas fa-robot"></i> <span class="chat-label">Chat with Us</span>
+    </button>
+
+    <div id="hospitalChatbot" class="chat-window">
+        
+        <div class="chat-header">
+            <div class="bot-info">
+                <div class="bot-avatar"><i class="fas fa-user-nurse"></i></div>
+                <div>
+                    <h4>Bhakti Assistant</h4>
+                    <span class="status-dot"></span> <small>Online</small>
+                </div>
+            </div>
+            <button class="close-chat" onclick="toggleChat()">&times;</button>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+            <div class="message bot-msg">
+                <p>Namaste! I am the Bhakti Lok Virtual Assistant. How can I help you today?</p>
+            </div>
+        </div>
+
+        <div class="chat-options" id="chatOptions">
+            <button onclick="handleUserOption('appointment')">Book Appointment</button>
+            <button onclick="handleUserOption('emergency')">Emergency Help</button>
+            <button onclick="handleUserOption('timing')">OPD Timings</button>
+            <button onclick="handleUserOption('location')">Location</button>
+        </div>
+
+    </div>
 </body>
 </html>

@@ -3,15 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bhakti Lok Hospital | About Us</title>
+    <title>About Us | Bhakti Lok Hospital</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Local style for the split layout inside the card */
+        .about-split {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr; /* Text gets more space */
+            gap: 30px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) {
+            .about-split { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
+
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <div class="top-contact">
+                <span><i class="fas fa-phone-alt"></i> Emergency: <strong>077380 40157</strong></span>
+            </div>
+            <div class="top-socials">
+                <a href="opd-booking.html" class="btn-small">Book Appointment</a>
+            </div>
+        </div>
+    </div>
 
     <nav class="navbar">
         <div class="logo">
             <h1>Bhakti Lok Hospital</h1>
+            <p>Advanced Multispeciality Care Center</p>
         </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
@@ -20,129 +45,95 @@
             <li><a href="gallery.html">Photo Gallery</a></li>
             <li><a href="contact.html">Contact Us</a></li>
         </ul>
-        <div class="hamburger">
-            <i class="fas fa-bars"></i>
-        </div>
+        <div class="hamburger"><i class="fas fa-bars"></i></div>
     </nav>
 
-    <header class="page-header">
-        <div class="header-content">
-            <h2>About Us</h2>
-            <p>Efficient Care, Modern Facilities, Trusted Doctors.</p>
-        </div>
-    </header>
-
-    <section class="about-main section-padding">
+    <section class="gallery-section section-padding"> 
         <div class="container">
-            <div class="about-row">
-                <div class="about-img-col">
-                    <img src="images/home-page.png" alt="Doctor Consultation">
-                </div>
-                <div class="about-text-col">
-                    <h3>Who We Are</h3>
-                    <p>Bhakti Lok Hospital is a compact, highly efficient healthcare facility dedicated to general checkups, hospital admissions, and emergency response. Designed to be resource-efficient, we ensure that every patient receives immediate attention without the procedural delays of larger institutions.</p>
-                    <p>Our mission is simple: To provide accessible, high-quality medical care in a facility that balances modern medical technology with patient comfort.</p>
-                    
-                    <div class="stats-box">
-                        <div class="stat">
-                            <h4>24/7</h4>
-                            <p>Emergency</p>
-                        </div>
-                        <div class="stat">
-                            <h4>2</h4>
-                            <p>Specialized OPDs</p>
-                        </div>
-                        <div class="stat">
-                            <h4>3</h4>
-                            <p>Floors of Care</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="infrastructure section-padding bg-light">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Infrastructure</h2>
-                <p>A tour of our organized 3-level facility</p>
-                <div class="line"></div>
+            
+            <div class="section-header-center">
+                <h2>About Bhakti Lok</h2>
+                <div class="center-line"></div>
+                <p>Compassionate Care. Advanced Medicine.</p>
             </div>
 
-            <div class="floor-timeline">
+            <div class="gallery-category-card" style="margin-bottom: 40px;">
+                <div class="category-header">
+                    <h3><i class="fas fa-hospital"></i> Who We Are</h3>
+                </div>
                 
-                <div class="floor-card">
-                    <div class="floor-number">Ground Floor</div>
-                    <div class="floor-details">
-                        <h3>Emergency & Diagnosis Hub</h3>
-                        <p>The heart of our operations, designed for speed and accessibility.</p>
-                        <ul>
-                            <li><strong>OPD 1:</strong> General Purpose (All Doctors).</li>
-                            <li><strong>OPD 2:</strong> Specialized Gynaecology & Treatment Plans.</li>
-                            <li><strong>Emergency:</strong> ICU & Main Doctor's Office.</li>
-                            <li><strong>Support:</strong> Registration Desk, Pathology Lab, Pharmacy.</li>
-                        </ul>
+                <div class="about-content" style="color: white; padding: 10px;">
+                    
+                    <div class="about-split">
+                        <div>
+                            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 15px;">
+                                <strong>Bhakti Lok Hospital</strong> is a premier healthcare facility in Mira Road, dedicated to providing world-class medical treatment at affordable rates. We believe in a patient-first approach, combining advanced technology with human compassion.
+                            </p>
+                            <p style="font-size: 1rem; line-height: 1.8; opacity: 0.9;">
+                                Since our inception, we have focused on bridging the gap between high-quality healthcare and affordability. Our team comprises senior consultants and dedicated nursing staff who work round the clock to ensure patient recovery.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <img src="images/home-page.png" alt="Hospital Building" style="width: 100%; border-radius: 8px; border: 4px solid white;">
+                        </div>
                     </div>
-                </div>
 
-                <div class="floor-card">
-                    <div class="floor-number">1st Floor</div>
-                    <div class="floor-details">
-                        <h3>Surgical & Wards</h3>
-                        <p>Dedicated areas for treatment and gender-separate recovery.</p>
-                        <ul>
-                            <li><strong>Operation Theatre:</strong> Fully equipped for surgeries.</li>
-                            <li><strong>Male Ward:</strong> Separate monitored recovery area.</li>
-                            <li><strong>Female Ward:</strong> Separate monitored recovery area.</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="floor-card">
-                    <div class="floor-number">2nd Floor</div>
-                    <div class="floor-details">
-                        <h3>Patient Rooms</h3>
-                        <p>Comfortable accommodations for longer stays.</p>
-                        <ul>
-                            <li><strong>Deluxe Rooms:</strong> Private rooms with premium amenities.</li>
-                            <li><strong>Sharing Rooms:</strong> Economical, clean shared spaces.</li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <section class="amenities section-padding">
-        <div class="container">
-            <div class="section-title">
-                <h2>Key Amenities</h2>
-                <div class="line"></div>
-            </div>
-            <div class="amenities-grid">
-                <div class="amenity-item">
-                    <i class="fas fa-ambulance"></i>
-                    <h4>24 Hr Ambulance</h4>
-                    <p>Round-the-clock transport support for emergencies.</p>
-                </div>
-                <div class="amenity-item">
-                    <i class="fas fa-user-md"></i>
-                    <h4>Main Doctor's Office</h4>
-                    <p>Centrally located on the ground floor for easy access.</p>
-                </div>
-                <div class="amenity-item">
-                    <i class="fas fa-flask"></i>
-                    <h4>In-House Pathology</h4>
-                    <p>Quick test results to speed up diagnosis.</p>
-                </div>
-                <div class="amenity-item">
-                    <i class="fas fa-pills"></i>
-                    <h4>Pharmacy</h4>
-                    <p>Stocked with all necessary medication.</p>
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 20px 0;">
+                    
+                    <p style="font-size: 1rem; line-height: 1.8; opacity: 0.9;">
+                        We are committed to continuous improvement in healthcare delivery. Our vision extends beyond treatment; we aim to create a healing environment where patients feel safe and cared for. From routine checkups to complex surgeries, Bhakti Lok Hospital stands as a pillar of trust in the community.
+                    </p>
                 </div>
             </div>
+
+            <div class="gallery-category-card">
+                <div class="category-header">
+                    <h3><i class="fas fa-briefcase-medical"></i> Our Facilities</h3>
+                    <p>World-Class Infrastructure</p>
+                </div>
+
+                <div class="facilities-grid">
+                    
+                    <div class="facility-box">
+                        <i class="fas fa-procedures"></i>
+                        <h4>Advanced OT</h4>
+                        <p>Modular Operation Theatre with HEPA filters.</p>
+                    </div>
+
+                    <div class="facility-box">
+                        <i class="fas fa-heartbeat"></i>
+                        <h4>ICU & NICU</h4>
+                        <p>Critical care units with 24/7 monitoring systems.</p>
+                    </div>
+
+                    <div class="facility-box">
+                        <i class="fas fa-baby-carriage"></i>
+                        <h4>Maternity</h4>
+                        <p>Specialized labor rooms and post-natal care.</p>
+                    </div>
+
+                    <div class="facility-box">
+                        <i class="fas fa-x-ray"></i>
+                        <h4>Diagnostics</h4>
+                        <p>Digital X-Ray, Pathology Lab, and Sonography.</p>
+                    </div>
+
+                    <div class="facility-box">
+                        <i class="fas fa-pills"></i>
+                        <h4>Pharmacy</h4>
+                        <p>24/7 in-house pharmacy with home delivery.</p>
+                    </div>
+
+                    <div class="facility-box">
+                        <i class="fas fa-ambulance"></i>
+                        <h4>Ambulance</h4>
+                        <p>Cardiac ambulance available round the clock.</p>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -150,31 +141,28 @@
         <div class="footer-container">
             <div class="footer-col">
                 <h3>Bhakti Lok Hospital</h3>
-                <p>Dedicated to providing the best medical care with trust and reliability.</p>
-            </div>
-            <div class="footer-col">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h3>Find Us</h3>
-                <div class="map-container">
+                <p>Dedicated to providing the best medical care.</p>
+                <br>
+                <div style="width: 100%; height: 150px; border: 2px solid rgba(255,255,255,0.2); border-radius: 5px; overflow: hidden;">
                     <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.066!2d77.123!3d28.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDM2JzAwLjAiTiA3N8KwMDcnMTIuMCJF!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin" 
-                        width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy">
+                        src="https://maps.google.com/maps?q=Bhaktilok+Hospital+Mira+Road&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        loading="lazy">
                     </iframe>
                 </div>
             </div>
+            <div class="footer-col">
+                <h3>Find Us</h3>
+                <p><strong>Address:</strong><br>NH School Rd, Bharti Nagar, <br>Mira Road East, Mumbai - 401107</p>
+                <p><strong>Phone:</strong> 077380 40157</p>
+                <br>
+                <a href="opd-booking.html" class="btn-small">Book Appointment</a>
+            </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2024 Bhakti Lok Hospital. All Rights Reserved.</p>
-        </div>
+        <div class="footer-bottom"><p>© 2024 Bhakti Lok Hospital.</p></div>
     </footer>
-
     <script src="script.js"></script>
 </body>
 </html>

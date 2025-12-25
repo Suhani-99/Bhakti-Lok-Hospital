@@ -1433,3 +1433,1137 @@ footer {
         bottom: 20px;
     }
 }
+/* =========================================
+   TASK 2: SLIDING SLIDER (New Styles)
+   ========================================= */
+
+/* The Main Window */
+.hero-slider-container {
+    position: relative;
+    width: 100%;
+    height: 85vh; /* 85% of screen height */
+    overflow: hidden; /* Hides slides that are off-screen */
+    background: #000;
+}
+
+/* The Long Strip of Images */
+.slider-wrapper {
+    display: flex; /* Puts slides side-by-side in a row */
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out; /* The smooth sliding magic */
+}
+
+/* Individual Slide Box */
+.slide-item {
+    min-width: 100%; /* Each slide takes full screen width */
+    height: 100%;
+    position: relative;
+}
+
+/* The Image inside the slide */
+.slide-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center; /* Focus on faces */
+    opacity: 0.65; /* Dark overlay so text is readable */
+}
+
+/* Text on top of the slides */
+/* (We reuse hero-text, but ensure z-index is high) */
+.hero-text {
+    z-index: 5; 
+}
+
+/* --- Navigation Buttons (Arrows) --- */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.3s;
+    border-radius: 5px;
+}
+
+.slider-btn:hover {
+    background-color: var(--accent-color); /* Light blue on hover */
+}
+
+.prev-btn { left: 20px; }
+.next-btn { right: 20px; }
+
+/* Mobile Adjustment for Arrows */
+@media (max-width: 768px) {
+    .slider-btn { padding: 10px 15px; font-size: 1.5rem; }
+}
+/* Fix for the 3rd Slide (Main Doctor Office) */
+.slide-item:nth-child(3) img {
+    /* "center center" usually fixes room photos */
+    object-position: center center !important; 
+}
+/* =========================================
+   TASK 3: MOVING TEXT STRIP (Ticker)
+   ========================================= */
+
+.news-ticker-container {
+    background-color: var(--primary-blue); /* Dark Blue background */
+    color: white;
+    display: flex;
+    align-items: center;
+    overflow: hidden; /* Cuts off text that goes outside */
+    height: 45px; /* Fixed height strip */
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+}
+
+/* The "Updates" Label on the left */
+.ticker-title {
+    background-color: var(--accent-color); /* Cyan/Teal */
+    color: white;
+    padding: 0 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    z-index: 2; /* Sits on top of the scrolling text */
+    box-shadow: 5px 0 10px rgba(0,0,0,0.2);
+}
+
+/* The area where text scrolls */
+.ticker-wrapper {
+    flex: 1; /* Takes remaining width */
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap; /* Forces text into one long line */
+}
+
+/* The moving text itself */
+.ticker-content {
+    display: inline-block;
+    padding-left: 100%; /* Starts off-screen to the right */
+    animation: tickerScroll 25s linear infinite; /* Smooth 25s loop */
+}
+
+.ticker-content span {
+    margin-right: 30px;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.ticker-content i {
+    color: var(--accent-color);
+    margin-right: 5px;
+}
+
+.tick-divider {
+    color: rgba(255,255,255,0.4);
+}
+
+/* Animation Keyframes */
+@keyframes tickerScroll {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+}
+
+/* Pause on Hover (So people can read it) */
+.ticker-wrapper:hover .ticker-content {
+    animation-play-state: paused;
+}
+/* =========================================
+   SERVICES & OPD PAGE STYLES
+   ========================================= */
+
+/* The Split Layout (Instructions vs Form) */
+.opd-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* Left Side: Guidelines */
+.guidelines-list {
+    list-style: none;
+    margin: 20px 0;
+}
+
+.guidelines-list li {
+    background: white;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border-left: 4px solid var(--accent-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    font-size: 0.95rem;
+}
+
+.guidelines-list i {
+    color: var(--primary-blue);
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.opd-contact-box {
+    background: var(--primary-blue);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.opd-contact-box i {
+    font-size: 2rem;
+    color: var(--accent-color);
+}
+
+.opd-contact-box h5 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* Right Side: The Form Card */
+.opd-form-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    overflow: hidden;
+    border-top: 5px solid var(--accent-color);
+}
+
+.form-header {
+    background: #f4f9ff;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.form-header h3 {
+    color: var(--primary-blue);
+    margin: 0;
+}
+
+#bookingForm {
+    padding: 30px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--primary-blue);
+    outline: none;
+}
+
+.btn-full {
+    width: 100%;
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn-full:hover {
+    background-color: var(--accent-color);
+}
+
+/* Service Grid (Bottom Section) */
+.section-heading-center {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+}
+
+.line-center {
+    width: 60px;
+    height: 4px;
+    background: var(--accent-color);
+    margin: 0 auto 40px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.service-card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    transition: 0.3s;
+    border: 1px solid #eee;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    border-bottom: 3px solid var(--primary-blue);
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    background: #f0f8ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: var(--primary-blue);
+    font-size: 1.8rem;
+}
+
+.service-card h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Mobile Fix */
+@media (max-width: 768px) {
+    .opd-grid {
+        grid-template-columns: 1fr; /* Stack vertically on mobile */
+    }
+}
+/* =========================================
+   OPD BOOKING INTERFACE (Step 2 Styles)
+   ========================================= */
+
+/* Date Chips (Today, Tomorrow) */
+.date-chips {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.chip {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.chip.active {
+    background: var(--primary-blue);
+    color: white;
+    border-color: var(--primary-blue);
+}
+
+/* Time Slots */
+.time-slots {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+.slot-btn {
+    padding: 10px 15px;
+    background: #eee;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.slot-btn:hover {
+    background: #ddd;
+}
+/* =========================================
+   OPD FIXES & UPDATES
+   ========================================= */
+
+/* Fix: Padding inside inputs so text doesn't touch edges */
+.input-padded {
+    padding: 12px 15px !important; /* Force more space inside */
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't break width */
+}
+
+/* Fix: New Guidelines "Process Flow" styling */
+.process-flow {
+    margin: 25px 0;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-blue);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.process-flow h4 {
+    margin-bottom: 15px;
+    color: var(--primary-blue);
+}
+.step-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #444;
+}
+.step-num {
+    background: var(--accent-color);
+    color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 0.8rem;
+}
+
+/* Fix: Full Screen Success Page */
+.full-screen-success {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f4f9ff;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.success-card-centered {
+    background: white;
+    padding: 50px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    max-width: 500px;
+    width: 90%;
+}
+
+.token-box {
+    background: #e6f9e9;
+    border: 2px dashed #28a745;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 10px;
+}
+.token-box h1 {
+    color: #28a745;
+    margin: 5px 0 0 0;
+    font-size: 2.5rem;
+}
+/* =========================================
+   DOCTOR SELECTION DASHBOARD
+   ========================================= */
+
+.doctor-selection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.doctor-card {
+    background: white;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.doctor-card:hover {
+    border-color: var(--primary-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* When a doctor is clicked */
+.doctor-card.selected {
+    border-color: var(--primary-blue);
+    background-color: #f0f8ff; /* Light blue tint */
+    box-shadow: 0 0 0 2px var(--primary-blue); /* Strong focus ring */
+}
+
+/* The Tick Mark (Check icon) */
+.select-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--primary-blue);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    display: flex; /* Hidden by default via JS logic? No, let's use CSS opacity */
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.doctor-card.selected .select-indicator {
+    opacity: 1;
+}
+
+.doc-thumb-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid #eee;
+}
+
+.doctor-card.selected .doc-thumb-large {
+    border-color: var(--primary-blue);
+}
+
+.doctor-card h4 {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: var(--primary-blue);
+}
+
+.doctor-card p {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+}
+
+/* Mobile: Stack doctors vertically if screen is small */
+@media (max-width: 480px) {
+    .doctor-selection-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* =========================================
+   NEW OPD STYLES (Profile & Overview)
+   ========================================= */
+
+/* Doctor Profile Card (Step 3) */
+.full-doc-profile {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid var(--primary-blue);
+}
+
+.prof-img-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+}
+
+.prof-info h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #333;
+}
+
+.prof-meta {
+    display: flex;
+    gap: 15px;
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* Booking Summary Box (Step 4 - Invoice Look) */
+.booking-summary-box {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 1rem;
+    color: #444;
+}
+
+.btn-text {
+    width: 100%;
+    margin-top: 15px;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* Receipt Style (Final Screen) */
+.receipt-box {
+    background: #f8fbfd;
+    border: 1px dashed var(--primary-blue);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.token-display {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    border: 1px solid #eee;
+}
+
+.token-display h1 {
+    color: var(--primary-blue);
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+/* Mobile Fix for Profile */
+@media (max-width: 480px) {
+    .full-doc-profile {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+/* =========================================
+   TASK 4: FACILITIES SECTION (Busy Grid)
+   ========================================= */
+
+.facilities-section {
+    background-color: #e3f2fd;
+    /* Keep the border */
+    border-top: 1px solid #bbdefb;
+    border-bottom: 1px solid #bbdefb;
+}
+
+.section-header-center {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header-center h2 {
+    font-size: 2.2rem;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+}
+
+.center-line {
+    width: 60px;
+    height: 4px;
+    background: var(--accent-color);
+    margin: 0 auto 15px;
+    border-radius: 2px;
+}
+
+/* The Dense Grid */
+.facilities-grid {
+    display: grid;
+    /* This magic code fits as many boxes as possible (3 or 4 per row) */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 20px;
+}
+
+.facility-box {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.3s ease;
+    border: 1px solid #eee;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+    position: relative;
+    overflow: hidden; /* Keeps the hover effect inside */
+}
+
+/* Hover Effect: Lifts up and shows a blue border bottom */
+.facility-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 86, 179, 0.15);
+    border-bottom: 4px solid var(--accent-color);
+}
+
+.facility-box i {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    margin-bottom: 15px;
+    background: #eef7ff;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+/* On hover, icon spins slightly or changes color */
+.facility-box:hover i {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.facility-box h4 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.facility-box p {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.5;
+}
+/* =========================================
+   TASK 5: BUSY GALLERY (Blue Card Style)
+   ========================================= */
+
+/* 1. Main Background */
+.gallery-section {
+    background-color: #f4f9ff; /* Very faint background for the whole page */
+    border-top: 1px solid #dee2e6;
+}
+
+/* 2. The "Blue Card" Container for each Category */
+.gallery-category {
+    background: #e3f2fd; /* Light Blue Background */
+    border: 1px solid #bbdefb; /* Slightly darker blue border */
+    padding: 25px; /* Spacing inside the card */
+    border-radius: 12px; /* Rounded corners */
+    margin-bottom: 40px; /* Space between the two cards */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* 3D Shadow */
+    position: relative;
+}
+
+/* 3. The Title (Styled as a "Header Strip") */
+.category-title {
+    background: var(--primary-blue); /* Dark Blue Strip */
+    color: white;
+    padding: 10px 20px;
+    display: inline-block;
+    border-radius: 5px;
+    margin-top: -40px; /* Moves the title UP so it sits on the edge of the card */
+    margin-bottom: 20px;
+    margin-left: 10px;
+    font-size: 1.3rem;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 4. The Grid inside the Blue Card */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* 5. The Photos (With White Borders for Contrast) */
+.gallery-item {
+    border: 5px solid white; /* The white frame */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    overflow: hidden;
+    height: 220px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* Hover Effect */
+.gallery-item:hover {
+    transform: scale(1.02); /* Slight zoom */
+    border-color: var(--accent-color); /* Frame turns cyan */
+    z-index: 2;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* The Overlay Text (Blue strip at bottom of photo) */
+.overlay {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 86, 179, 0.9);
+    color: white;
+    width: 100%;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.9rem;
+    transform: translateY(100%); /* Hidden by default */
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .overlay {
+    transform: translateY(0); /* Slides up on hover */
+}
+/* =========================================
+   TASK 5: GALLERY (Home Page Vibe - High Contrast)
+   ========================================= */
+
+/* Main Background */
+.gallery-section {
+    background-color: #f4f9ff; /* Light pattern background */
+    background-image: radial-gradient(#dbeafe 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* THE DARK BLUE CARD (The "Busy" Element) */
+.gallery-category-card {
+    background: var(--primary-blue); /* Solid Dark Blue */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0, 40, 100, 0.2); /* Deep shadow */
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #004488;
+}
+
+/* Decorative Accent on the Card */
+.gallery-category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0 0 0 100%;
+    z-index: 0;
+}
+
+/* Header inside the Blue Card */
+.category-header {
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+    border-left: 5px solid var(--accent-color); /* Cyan Line */
+    padding-left: 15px;
+}
+
+.category-header h3 {
+    color: white;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.category-header p {
+    color: #aaccff; /* Light blue text */
+    margin: 5px 0 0 0;
+    font-size: 0.95rem;
+}
+
+/* Grid Layout */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* Dense 4-col grid */
+    gap: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+/* The Photo Frames (Polaroids) */
+.gallery-item {
+    background: white;
+    padding: 5px; /* Creates the white border frame */
+    border-radius: 5px;
+    height: 200px; /* Fixed height for uniformity */
+    overflow: hidden;
+    position: relative;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+}
+
+/* Hover Effect: Pop out */
+.gallery-item:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    background: var(--accent-color); /* Border turns cyan on hover */
+}
+
+/* Text Overlay on Hover */
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    font-size: 0.9rem;
+    transform: translateY(100%);
+    transition: 0.3s;
+}
+
+.gallery-item:hover .overlay {
+    transform: translateY(0);
+}
+/* =========================================
+   TASK 6: MINI POP-UP (Toast Style)
+   ========================================= */
+
+/* Position: Bottom Right */
+.popup-overlay {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9999;
+    display: none; /* Hidden initially */
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* The Mini Box */
+.popup-content.mini-popup {
+    background: white;
+    width: 260px; /* Very compact */
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    overflow: hidden;
+    border-left: 4px solid var(--accent-color); /* Cyan Left Border */
+    border-top: none;
+}
+
+/* Header */
+.popup-header {
+    background: var(--primary-blue);
+    color: white;
+    padding: 8px 12px;
+}
+
+.popup-header h3 {
+    margin: 0;
+    font-size: 0.95rem; /* Small text */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Close Button */
+.close-btn {
+    top: 6px;
+    right: 8px;
+    font-size: 1.1rem;
+    color: white;
+}
+
+/* Body */
+.popup-body {
+    padding: 12px;
+    text-align: center;
+}
+/* =========================================
+   TASK 9: VIRTUAL ASSISTANT (CHATBOT)
+   ========================================= */
+
+/* 1. The Floating Button */
+.chat-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 30px;
+    font-size: 1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+    border: 2px solid white;
+}
+
+.chat-toggle-btn:hover {
+    transform: scale(1.05);
+    background: var(--accent-color);
+}
+
+/* 2. The Chat Window */
+.chat-window {
+    position: fixed;
+    bottom: 80px; /* Sits above the button */
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 10001;
+    display: none; /* Hidden initially */
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Header */
+.chat-header {
+    background: var(--primary-blue);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bot-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bot-avatar {
+    width: 40px;
+    height: 40px;
+    background: white;
+    color: var(--primary-blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #28a745; /* Green dot */
+    border-radius: 50%;
+}
+
+.close-chat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Body (Scrollable messages) */
+.chat-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f4f7f6;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Message Bubbles */
+.message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.bot-msg {
+    background: white;
+    color: #333;
+    border-bottom-left-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.user-msg {
+    background: var(--primary-blue);
+    color: white;
+    align-self: flex-end; /* Pushes to right */
+    border-bottom-right-radius: 2px;
+}
+
+/* Options Area (Buttons) */
+.chat-options {
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.chat-options button {
+    background: white;
+    border: 1px solid var(--primary-blue);
+    color: var(--primary-blue);
+    padding: 8px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: 0.2s;
+}
+
+.chat-options button:hover {
+    background: var(--primary-blue);
+    color: white;
+}

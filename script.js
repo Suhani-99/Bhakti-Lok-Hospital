@@ -236,3 +236,126 @@ function handleContactSubmit(e) {
     alert(`Thank you, ${name}! Your message has been sent to our support team. We will contact you at ${email} shortly.`);
     document.getElementById('contactForm').reset();
 }
+/* =========================================
+   TASK 2: SLIDER LOGIC (Auto + Click)
+   ========================================= */
+
+let currentSlide = 0;
+// Select all slides
+const slides = document.querySelectorAll('.slide-item');
+const totalSlides = slides.length;
+// Select the wrapper that moves
+const sliderWrapper = document.getElementById('sliderWrapper');
+
+// Function to move slides
+function moveSlide(direction) {
+    currentSlide += direction;
+
+    // Logic: If we go past the last slide, loop to start
+    if (currentSlide >= totalSlides) {
+        currentSlide = 0;
+    }
+    // Logic: If we go before the first slide, loop to end
+    if (currentSlide < 0) {
+        currentSlide = totalSlides - 1;
+    }
+
+    // Move the wrapper! (e.g., -100%, -200%)
+    const offset = -currentSlide * 100; 
+    sliderWrapper.style.transform = `translateX(${offset}%)`;
+}
+
+// Auto-Slide Timer (Runs every 5 seconds)
+let autoSlide = setInterval(() => {
+    moveSlide(1); // Move forward by 1
+}, 5000);
+
+// Optional: Pause auto-slide when user clicks buttons
+document.querySelectorAll('.slider-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        clearInterval(autoSlide); // Stop the timer
+        autoSlide = setInterval(() => { moveSlide(1); }, 5000); // Restart it
+    });
+});
+/* =========================================
+   TASK 6: POP-UP LOGIC
+   ========================================= */
+
+// Function to Show Popup
+function showPopup() {
+    const popup = document.getElementById('promoPopup');
+    if (popup) {
+        popup.style.display = 'flex'; // Show it
+    }
+}
+
+// Function to Close Popup
+function closePopup() {
+    const popup = document.getElementById('promoPopup');
+    if (popup) {
+        popup.style.display = 'none'; // Hide it
+    }
+}
+
+// Trigger the popup after 3 seconds (3000 milliseconds)
+window.onload = function() {
+    setTimeout(showPopup, 1000);
+};
+/* =========================================
+   TASK 9: CHATBOT LOGIC
+   ========================================= */
+
+// 1. Toggle Chat Window
+function toggleChat() {
+    const chatWindow = document.getElementById('hospitalChatbot');
+    if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+        chatWindow.style.display = 'flex';
+    } else {
+        chatWindow.style.display = 'none';
+    }
+}
+
+// 2. Handle User Selection
+function handleUserOption(option) {
+    const chatBody = document.getElementById('chatBody');
+
+    // Add User Message (Visual only)
+    let userText = "";
+    if (option === 'appointment') userText = "Book an Appointment";
+    if (option === 'emergency') userText = "Emergency Help";
+    if (option === 'timing') userText = "OPD Timings";
+    if (option === 'location') userText = "Hospital Location";
+
+    // Append User Bubble
+    const userBubble = document.createElement('div');
+    userBubble.className = 'message user-msg';
+    userBubble.innerHTML = `<p>${userText}</p>`;
+    chatBody.appendChild(userBubble);
+
+    // Scroll to bottom
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    // Simulate Bot "Typing" delay (0.5 seconds)
+    setTimeout(() => {
+        let botResponse = "";
+
+        if (option === 'appointment') {
+            botResponse = "You can book an appointment online easily. <br><br> <a href='opd-booking.html' style='color:#0056b3; font-weight:bold;'>Click here to Book Now</a>";
+        } else if (option === 'emergency') {
+            botResponse = "For Emergencies, please call our 24/7 Casualty line immediately: <br><br> <strong>077380 40157</strong>";
+        } else if (option === 'timing') {
+            botResponse = "<strong>OPD Timings:</strong><br>Mon-Sat: 10:00 AM - 8:00 PM<br>Sun: 10:00 AM - 1:00 PM";
+        } else if (option === 'location') {
+            botResponse = "We are located at Mira Road East. <a href='contact.html' style='color:#0056b3;'>View Map</a>";
+        }
+
+        // Append Bot Bubble
+        const botBubble = document.createElement('div');
+        botBubble.className = 'message bot-msg';
+        botBubble.innerHTML = `<p>${botResponse}</p>`;
+        chatBody.appendChild(botBubble);
+        
+        // Scroll to bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }, 600);
+}

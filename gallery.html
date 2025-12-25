@@ -3,15 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bhakti Lok Hospital | Photo Gallery</title>
+    <title>Photo Gallery | Bhakti Lok Hospital</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <div class="top-contact">
+                <span><i class="fas fa-phone-alt"></i> Emergency: <strong>077380 40157</strong></span>
+                <span class="divider">|</span>
+                <span><i class="fas fa-map-marker-alt"></i> Mira Bhayandar, Mumbai</span>
+            </div>
+            <div class="top-socials">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="services.html" class="btn-small">Book Appointment</a>
+            </div>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="logo">
             <h1>Bhakti Lok Hospital</h1>
+            <p>Advanced Multispeciality Care Center</p>
         </div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
@@ -25,10 +41,10 @@
         </div>
     </nav>
 
-    <header class="page-header gallery-header">
+    <header class="page-header">
         <div class="header-content">
-            <h2>Photo Gallery</h2>
-            <p>A glimpse into our facilities, infrastructure, and care.</p>
+            <h2>Our Infrastructure</h2>
+            <p>A glimpse into our advanced facilities and patient care</p>
         </div>
     </header>
 
@@ -36,67 +52,61 @@
         <div class="container">
             
             <div class="gallery-category">
-                <div class="section-title">
-                    <h2>Infrastructure & Reception</h2>
-                    <div class="line"></div>
-                </div>
+                <h3 class="category-title">Hospital Infrastructure</h3>
                 <div class="gallery-grid">
+                    
                     <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Hospital Entrance" onclick="openLightbox(this)">
+                        <img src="images/hospital-outside.png" alt="Hospital Exterior" onclick="openLightbox(this)">
+                        <div class="overlay"><p>Main Building</p></div>
                     </div>
+
                     <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Reception Desk" onclick="openLightbox(this)">
+                        <img src="images/reception.png" alt="Reception Desk" onclick="openLightbox(this)">
+                        <div class="overlay"><p>Reception Desk</p></div>
                     </div>
+
                     <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Waiting Area" onclick="openLightbox(this)">
+                        <img src="images/lobby-area.png" alt="Lobby" onclick="openLightbox(this)">
+                        <div class="overlay"><p>Main Lobby</p></div>
                     </div>
+
+                    <div class="gallery-item">
+                        <img src="images/waiting-area.png" alt="Waiting Area" onclick="openLightbox(this)">
+                        <div class="overlay"><p>Patient Waiting Area</p></div>
+                    </div>
+
                 </div>
             </div>
 
             <div class="gallery-category">
-                <div class="section-title">
-                    <h2>Wards & Patient Care</h2>
-                    <div class="line"></div>
-                </div>
+                <h3 class="category-title">Facilities & Patient Care</h3>
                 <div class="gallery-grid">
+                     
                     <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Patient Deluxe Room" onclick="openLightbox(this)">
+                        <img src="images/opd-1.png" alt="OPD Room 1" onclick="openLightbox(this)">
+                        <div class="overlay"><p>General OPD</p></div>
                     </div>
-                    <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1516574187841-693083f0cc8d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="General Ward" onclick="openLightbox(this)">
-                    </div>
-                    <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Nursing Station" onclick="openLightbox(this)">
-                    </div>
-                </div>
-            </div>
 
-            <div class="gallery-category">
-                <div class="section-title">
-                    <h2>Advanced Facilities</h2>
-                    <div class="line"></div>
-                </div>
-                <div class="gallery-grid">
                     <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Operation Theatre" onclick="openLightbox(this)">
+                        <img src="images/opd-2.png" alt="OPD Room 2" onclick="openLightbox(this)">
+                        <div class="overlay"><p>Specialist OPD</p></div>
                     </div>
+
                     <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Pathology Lab" onclick="openLightbox(this)">
+                        <img src="images/ward.png" alt="Patient Ward" onclick="openLightbox(this)">
+                        <div class="overlay"><p>In-Patient Ward</p></div>
                     </div>
+
                     <div class="gallery-item">
-                        <img src="https://images.unsplash.com/photo-1585435557343-3b092031a831?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Pharmacy" onclick="openLightbox(this)">
+                        <img src="images/home-page.png" alt="Doctor Consultation" onclick="openLightbox(this)">
+                        <div class="overlay"><p>Expert Consultation</p></div>
                     </div>
+
                 </div>
             </div>
 
         </div>
     </section>
-
-    <div id="gallery-lightbox" class="lightbox">
-        <span class="close-lightbox" onclick="closeLightbox()">&times;</span>
-        <img class="lightbox-content" id="lightbox-img">
-        <div id="lightbox-caption"></div>
-    </div>
 
     <footer>
         <div class="footer-container">
@@ -114,13 +124,23 @@
             </div>
             <div class="footer-col">
                 <h3>Find Us</h3>
-                <div class="map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3502.066!2d77.123!3d28.6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDM2JzAwLjAiTiA3N8KwMDcnMTIuMCJF!5e0!3m2!1sen!2sin!4v1600000000000!5m2!1sen!2sin" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <p>NH School Rd, Bharti Nagar,<br>Mira Road East, Mira Bhayandar,<br>Maharashtra 401107</p>
+                <p><strong>Phone:</strong> 077380 40157</p>
+                <div class="map-container" style="margin-top: 15px;">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3766.304040994194!2d72.8596696!3d19.2690943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7b0e608035fa3%3A0xc3647167623916!2sNH%20School%20Rd%2C%20Bharti%20Nagar%2C%20Mira%20Road%20East%2C%20Mira%20Bhayandar%2C%20Maharashtra%20401107!5e0!3m2!1sen!2sin!4v1703491234567!5m2!1sen!2sin" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
-        <div class="footer-bottom"><p>© 2024 Bhakti Lok Hospital. All Rights Reserved.</p></div>
+        <div class="footer-bottom">
+            <p>© 2024 Bhakti Lok Hospital. All Rights Reserved.</p>
+        </div>
     </footer>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close-btn">×</span>
+        <img id="lightbox-img" src="">
+        <p id="lightbox-caption"></p>
+    </div>
 
     <script src="script.js"></script>
 </body>

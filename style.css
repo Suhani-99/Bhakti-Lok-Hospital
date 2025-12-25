@@ -979,3 +979,457 @@ footer {
         padding: 20px;
     }
 }
+/* =========================================
+   1. TOP BAR STYLES (New Section)
+   ========================================= */
+.top-bar {
+    background-color: var(--primary-blue); /* Dark Blue */
+    color: var(--white);
+    padding: 12px 0;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.top-bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.top-contact span {
+    margin-right: 20px;
+    font-weight: 500;
+}
+
+.top-contact i {
+    color: var(--accent-color); /* Light Blue Icon */
+    margin-right: 5px;
+}
+
+.divider {
+    color: rgba(255,255,255,0.3);
+}
+
+.top-socials a {
+    color: var(--white);
+    margin-left: 15px;
+    font-size: 1.1rem;
+    transition: var(--transition);
+}
+
+.top-socials a:hover {
+    color: var(--accent-color);
+}
+
+.btn-small {
+    background-color: var(--accent-color);
+    padding: 8px 20px;
+    border-radius: 30px; /* Round buttons look more modern */
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 15px;
+    color: var(--white) !important; /* Force white text */
+}
+
+.btn-small:hover {
+    background-color: #009aa0;
+}
+
+/* =========================================
+   2. NAVBAR UPDATES (Bigger Logo)
+   ========================================= */
+.navbar {
+    padding: 15px 5%; /* Taller navbar */
+    height: auto;
+}
+
+.logo h1 {
+    font-size: 2.2rem; /* Much bigger text */
+    color: var(--primary-blue);
+    line-height: 1.1;
+    margin-bottom: 2px;
+}
+
+.logo p {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* =========================================
+   3. HERO SLIDER STYLES (Replaces .hero)
+   ========================================= */
+.hero-slider {
+    position: relative;
+    height: 85vh; /* Takes up 85% of the screen height */
+    overflow: hidden;
+    background: #000; /* Black background avoids white flashes */
+}
+
+.slides-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Individual Slide Styling */
+.slide {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0; /* Hidden by default */
+    /* 20s total because 4 slides x 5 seconds each */
+    animation: slideShow 20s infinite; 
+}
+
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image covers area without stretching */
+    opacity: 0.6; /* Dark overlay effect for readability */
+}
+
+/* Text on top of the slides */
+.hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--white);
+    width: 80%;
+    z-index: 2;
+}
+
+.hero-text h2 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    margin-bottom: 15px;
+}
+
+.hero-text p {
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+    background: rgba(0, 86, 179, 0.7); /* Blue box behind text */
+    display: inline-block;
+    padding: 8px 25px;
+    border-radius: 5px;
+}
+
+/* The Pulse Button (OPD Registration) */
+.hero-overlay-content {
+    position: absolute;
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.pulse-btn {
+    font-size: 1.3rem;
+    padding: 15px 50px;
+    border-radius: 50px;
+    box-shadow: 0 0 0 0 rgba(0, 196, 204, 0.7);
+    animation: pulse 2s infinite;
+}
+
+/* =========================================
+   4. ANIMATIONS (The Magic)
+   ========================================= */
+
+/* Timing for 4 Slides (Total 20s) */
+.slide:nth-child(1) { animation-delay: 0s; }
+.slide:nth-child(2) { animation-delay: 5s; }
+.slide:nth-child(3) { animation-delay: 10s; }
+.slide:nth-child(4) { animation-delay: 15s; }
+
+@keyframes slideShow {
+    0% { opacity: 0; transform: scale(1); }
+    5% { opacity: 1; }   /* Fade In */
+    20% { opacity: 1; transform: scale(1.05); } /* Stay Visible + Subtle Zoom */
+    25% { opacity: 0; }  /* Fade Out */
+    100% { opacity: 0; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 196, 204, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(0, 196, 204, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 196, 204, 0); }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .top-socials { display: none; } /* Hide socials on mobile to fit */
+    .top-contact { width: 100%; text-align: center; font-size: 0.8rem; }
+    .hero-text h2 { font-size: 2rem; }
+    .hero-text p { font-size: 1rem; }
+}
+/* --- GALLERY STYLES --- */
+.category-title {
+    font-size: 1.8rem;
+    color: var(--primary-blue);
+    margin: 30px 0 20px;
+    border-left: 5px solid var(--accent-color);
+    padding-left: 15px;
+}
+
+.gallery-grid {
+    display: grid;
+    /* This automatically arranges photos: 3 per row on PC, 1 on mobile */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 15px; /* Small gap for "busy" look */
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    height: 250px; /* Force all boxes to be same height */
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Prevents stretching */
+    transition: transform 0.5s ease;
+}
+
+/* Zoom Effect on Hover */
+.gallery-item:hover img {
+    transform: scale(1.1);
+}
+
+/* Text Overlay (Hidden by default, shows on hover) */
+.overlay {
+    position: absolute;
+    bottom: -50px; /* Hidden below */
+    left: 0;
+    width: 100%;
+    background: rgba(0, 86, 179, 0.9); /* Blue transparent bar */
+    color: white;
+    padding: 10px;
+    text-align: center;
+    transition: bottom 0.3s ease;
+}
+
+.gallery-item:hover .overlay {
+    bottom: 0; /* Slide up on hover */
+}
+/* --- CONTACT PAGE STYLES --- */
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr; /* Info takes less space, Map takes more */
+    gap: 30px;
+    align-items: start;
+}
+
+.contact-info-card {
+    background: white;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    border-top: 4px solid var(--primary-blue);
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 25px;
+}
+
+.icon-box {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 1.2rem;
+}
+
+.info-text h4 {
+    margin-bottom: 5px;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.info-text p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.map-column iframe {
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .contact-grid {
+        grid-template-columns: 1fr; /* Stack them on mobile */
+    }
+}
+/* =========================================
+   NEW WELCOME SECTION (Task 1: Busy Look)
+   ========================================= */
+
+/* 1. Background: Light Blue Gradient (No more plain white) */
+.home-about {
+    background: linear-gradient(to right, #f0f8ff, #e6f2fa); 
+    border-bottom: 4px solid var(--primary-blue); /* Strong separation line */
+}
+
+/* 2. Layout: 50-50 Split */
+.about-grid-new {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+}
+
+/* 3. Typography: Big & Bold */
+.sub-heading {
+    color: var(--accent-color); /* Cyan/Teal color */
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.about-text-content h2 {
+    font-size: 2.5rem; /* Huge Title */
+    color: var(--primary-blue);
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+
+.highlight {
+    color: var(--accent-color); /* Highlight 'Bhakti Lok' */
+}
+
+.blue-line {
+    width: 80px;
+    height: 5px;
+    background: var(--accent-color);
+    margin-bottom: 25px;
+    border-radius: 2px;
+}
+
+.lead-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333; /* Darker grey for readability */
+    margin-bottom: 20px;
+    border-left: 4px solid var(--primary-blue);
+    padding-left: 15px;
+}
+
+/* 4. Feature Boxes (The "Busy" Icons) */
+.feature-boxes {
+    display: flex;
+    gap: 15px; /* Tight gap */
+    margin: 30px 0;
+    flex-wrap: wrap; /* Wraps on smaller screens */
+}
+
+.f-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Subtle shadow pop */
+    border-left: 4px solid var(--primary-blue); /* Indian design accent */
+    flex: 1; /* Makes them fill the space */
+    min-width: 140px;
+}
+
+.f-box i {
+    font-size: 1.8rem;
+    color: var(--primary-blue);
+}
+
+.f-box h5 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #222;
+}
+
+.f-box small {
+    font-size: 0.75rem;
+    color: #666;
+    font-weight: 600;
+}
+
+/* 5. Big Image & Floating Badge */
+.about-image-big {
+    position: relative;
+    padding: 10px; /* Creates a white frame effect */
+    background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+.about-image-big img {
+    width: 100%;
+    border-radius: 5px;
+    display: block;
+}
+
+/* The "10+ Years" Badge */
+.exp-badge {
+    position: absolute;
+    bottom: 30px;
+    left: -20px; /* Hangs off the edge for 3D effect */
+    background: var(--primary-blue);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    border: 2px solid white;
+}
+
+.exp-badge h3 {
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.exp-badge p {
+    margin: 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Mobile Fix */
+@media (max-width: 768px) {
+    .about-grid-new {
+        grid-template-columns: 1fr;
+    }
+    .about-image-big {
+        margin-top: 30px;
+    }
+    .exp-badge {
+        left: 20px; /* Bring inside on mobile so it doesn't get cut off */
+        bottom: 20px;
+    }
+}

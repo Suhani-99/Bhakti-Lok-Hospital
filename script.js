@@ -3,38 +3,28 @@
    ========================================= */
 
 // Doctor Data: Array of Objects
+// REPLACE your existing 'const doctors' array with this:
+
 const doctors = [
     {
         id: 1,
-        name: "Dr. Sharma",
-        specialization: "General Physician",
-        qualification: "MBBS, MD",
-        description: "Senior consultant with 15 years of experience in internal medicine.",
-        image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+        name: "Dr. Mansi Shanghavi",
+        specialization: "Gynecologist & Obstetrician",
+        qualification: "MBBS, DGO",
+        fee: 1000,
+        description: "Empathetic gynecologist with 7 years of experience in healthcare. Specializing in obstetrics, pregnancy care, painless normal delivery, and women's health.",
+        // Make sure you have this image in your folder
+        image: "images/dr-mansi.png" 
     },
     {
         id: 2,
-        name: "Dr. Anjali Gupta",
-        specialization: "Gynaecologist",
-        qualification: "MBBS, MS (Obs & Gynae)",
-        description: "Expert in women's health, pregnancy care, and gynaecological surgeries.",
-        image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
-    },
-    {
-        id: 3,
-        name: "Dr. Rajesh Verma",
-        specialization: "Cardiologist",
-        qualification: "MBBS, DM (Cardiology)",
-        description: "Specialist in heart health, treating hypertension and cardiac disorders.",
-        image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
-    },
-    {
-        id: 4,
-        name: "Dr. Meera Iyer",
-        specialization: "Pediatrician",
-        qualification: "MBBS, MD (Pediatrics)",
-        description: "Dedicated to the health and well-being of infants, children, and adolescents.",
-        image: "https://images.unsplash.com/photo-1614608682850-e0d6ed316d47?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80"
+        name: "Dr. Amol Shah",
+        specialization: "Homeopathy Doctor",
+        qualification: "BHMS (M.U.H.S. Nasik, 2008)",
+        fee: 500, // Placeholder fee
+        description: "Homeopathy specialist with 17 years of experience. Also specializes in Dermatology & Cosmetology. Treats height issues, leg pain, and underweight disorders.",
+        // Using a generic placeholder image since you don't have one
+        image: "https://cdn-icons-png.flaticon.com/512/3774/3774299.png"
     }
 ];
 

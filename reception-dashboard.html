@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reception Dashboard | Bhakti Lok</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+    :root {
+        --primary-blue: #007bff; /* Ensure variable is defined */
+    }
+    
+    body { background: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
+    
+    .dash-nav { background: var(--primary-blue); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
+    .dash-container { max-width: 1400px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1.2fr 2fr; gap: 25px; }
+    
+    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
+    .card h3 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; color: var(--primary-blue); font-size: 1.1rem; }
+
+    /* --- UPDATED: Dynamic Status Card for Dual Shifts --- */
+    .status-row { 
+        display: flex; 
+        flex-direction: column; 
+        padding: 15px; 
+        background: #f8f9fa; 
+        border-radius: 8px; 
+        margin-bottom: 15px; 
+        border-left: 5px solid #ccc; 
+        transition: 0.3s;
+        gap: 8px; /* Adds space between Header, Morning Shift, and Evening Shift */
+    }
+    
+    .status-row.active { border-left-color: #28a745; background: #e8f5e9; }
+    .status-row.inactive { border-left-color: #dc3545; background: #fff5f5; }
+    
+    .status-header { display: flex; justify-content: space-between; align-items: center; }
+    
+    .time-controls { 
+        display: flex; 
+        gap: 10px; 
+        align-items: center; 
+        background: #ffffff; /* White background for better contrast */
+        padding: 8px 12px; 
+        border-radius: 6px; 
+        border: 1px solid #e0e0e0;
+    }
+
+    .time-input { 
+        padding: 5px; 
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+        width: 95px; /* Slightly wider for ease of use */
+        font-size: 0.85rem; 
+        font-family: inherit;
+    }
+    
+    .update-btn { 
+        background: var(--primary-blue); 
+        color: white; 
+        border: none; 
+        padding: 8px 15px; 
+        border-radius: 4px; 
+        cursor: pointer; 
+        font-size: 0.8rem; 
+        transition: 0.3s; 
+    }
+    .update-btn:hover { background: #0056b3; }
+
+    /* Switch Toggle Style */
+    .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch span { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+    .switch span:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    .switch input:checked + span { background-color: #28a745; }
+    .switch input:checked + span:before { transform: translateX(20px); }
+
+    /* General Styles */
+    .input-std { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+    .input-small { padding: 8px; font-size: 0.85rem; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; width: 100%; box-sizing: border-box; }
+    
+    .doc-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; background: #fff; }
+    .doc-list-item:last-child { border-bottom: none; }
+    
+    .delete-btn { color: #dc3545; background: none; border: none; cursor: pointer; font-size: 1rem; padding: 5px; }
+    .delete-btn:hover { background: #ffebee; border-radius: 50%; }
+
+    .appt-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .appt-table th { background: #e3f2fd; padding: 12px; text-align: left; font-size: 0.9rem; color: #024; }
+    .appt-table td { border-bottom: 1px solid #eee; padding: 12px; font-size: 0.9rem; }
+    
+    .badge-walkin { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; border: 1px solid #ffeeba; }
+    .badge-online { background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; border: 1px solid #c3e6cb; }
+    .txn-id { font-size: 0.7rem; color: #666; display: block; margin-top: 3px; font-family: monospace; }
+
+    /* Schedule Grid Styles */
+    .schedule-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+    .grid-slot { padding: 10px; text-align: center; border-radius: 6px; font-size: 0.85rem; border: 1px solid #ddd; background: #fff; }
+    .grid-slot.available { background: #e8f5e9; color: #155724; border-color: #c3e6cb; }
+    .grid-slot.booked { background: #f8f9fa; color: #6c757d; border-color: #dee2e6; cursor: not-allowed; }
+
+    /* --- NEW STYLES for Split Shifts --- */
+.shift-section {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.shift-header {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.shift-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 Columns */
+    gap: 8px;
+}
+
+/* Reuse existing .grid-slot styles, but ensure they fit well */
+.grid-slot {
+    padding: 8px;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+.grid-slot.available { background: #e8f5e9; color: #155724; border-color: #c3e6cb; }
+.grid-slot.booked { background: #f1f3f5; color: #6c757d; border-color: #dee2e6; cursor: not-allowed; opacity: 0.8; }
+.empty-msg { grid-column: span 3; text-align: center; color: #999; font-size: 0.8rem; font-style: italic; padding: 10px; }
+</style>
+</head>
+<body>
+
+    <div class="dash-nav">
+        <div style="font-size: 1.2rem; font-weight: bold;"><i class="fas fa-desktop"></i> Reception Console</div>
+        <div>
+            <span><i class="fas fa-user-circle"></i> Logged in: Reception</span>
+            <a href="staff-login.html" style="color: white; margin-left: 20px;">Logout</a>
+        </div>
+    </div>
+
+    <div class="dash-container">
+        
+        <div>
+            
+            <div class="card">
+                <h3><i class="fas fa-user-md"></i> Manage Doctors</h3>
+                <div style="background: #f9f9f9; padding: 12px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #eee;">
+                    <h5 style="margin:0 0 10px 0; color:#555;">+ Add New Doctor</h5>
+                    <input type="text" id="newDocName" placeholder="Name" class="input-small">
+                    <input type="text" id="newDocSpec" placeholder="Specialization" class="input-small">
+                    <button onclick="addNewDoctor()" class="btn-small" style="width:100%; background-color: var(--primary-blue);">Add Doctor</button>
+                </div>
+                <h5 style="margin-bottom: 5px; color:#555;">Active Doctors</h5>
+                <div id="doctorListContainer" style="max-height: 150px; overflow-y: auto;"><p>Loading...</p></div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-clock"></i> Doctor Schedule & Override</h3>
+                <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">Set shift timings and toggle availability.</p>
+                <div id="availabilityContainer"><p style="text-align:center; color:#999;">Loading...</p></div>
+            </div>
+
+            <div class="card walkin-form">
+                <h3><i class="fas fa-plus-circle"></i> Add Walk-in</h3>
+                <form onsubmit="addWalkin(event)">
+                    <label>Patient Name</label> <input type="text" id="pName" class="input-std" required>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                        <div><label>Phone</label> <input type="text" id="pPhone" class="input-std" required></div>
+                        <div><label>Age</label> <input type="number" id="pAge" class="input-std" required></div>
+                    </div>
+                    <label>Doctor</label> <select id="pDoctor" class="input-std"><option>Loading...</option></select>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div><label>Date</label> <input type="date" id="pDate" class="input-std" required></div>
+                        <div><label>Slot</label>
+                            <select id="pTime" class="input-std">
+                                <option>10:00 AM</option><option>10:30 AM</option><option>11:00 AM</option>
+                                <option>12:00 PM</option><option>05:00 PM</option><option>06:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-full" style="background:#28a745;">Confirm Booking</button>
+                </form>
+            </div>
+
+        </div>
+
+        <div>
+            
+            <div class="card">
+                <h3><i class="fas fa-calendar-alt"></i> Check Doctor Schedule</h3>
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:15px;">
+                    <select id="scheduleDocSelect" class="input-std" style="margin:0; width:50%;" onchange="checkSchedule()">
+                        <option value="">Select Doctor...</option>
+                    </select>
+                    <input type="date" id="scheduleDate" class="input-std" style="margin:0; width:40%;" onchange="checkSchedule()">
+                </div>
+                <div id="scheduleGrid" class="schedule-grid">
+                    <p style="grid-column: span 3; text-align:center; color:#999;">Select a doctor and date to view slots.</p>
+                </div>
+            </div>
+
+            <div class="card" style="min-height: 400px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3>📅 Today's Appointments</h3>
+                    <input type="date" id="viewDate" style="padding:6px; border:1px solid #ccc; border-radius:4px;" onchange="loadAppointments()">
+                </div>
+                <table class="appt-table">
+                    <thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Type / ID</th><th>Status</th></tr></thead>
+                    <tbody id="appointmentTableBody"></tbody>
+                </table>
+                <p id="noDataMsg" style="text-align:center; color:#999; margin-top:40px; display:none;">No appointments found.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    const API_URL = "http://localhost:5000/api";
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Set Default Dates
+    const setVal = (id) => { if(document.getElementById(id)) document.getElementById(id).value = today; };
+    setVal('viewDate');
+    setVal('pDate');
+    setVal('scheduleDate');
+
+    let allDoctors = []; 
+
+    // ----------------------------------------------------
+    // 1. DOCTOR FETCH & SCHEDULE LOGIC (UPDATED FOR DUAL SHIFTS)
+    // ----------------------------------------------------
+    async function fetchDoctors() {
+        try {
+            const res = await fetch(`${API_URL}/doctors`);
+            allDoctors = await res.json(); 
+            
+            const availContainer = document.getElementById('availabilityContainer');
+            const listContainer = document.getElementById('doctorListContainer');
+            const selectBox = document.getElementById('pDoctor');
+            const scheduleBox = document.getElementById('scheduleDocSelect');
+            
+            availContainer.innerHTML = "";
+            listContainer.innerHTML = "";
+            selectBox.innerHTML = "";
+            scheduleBox.innerHTML = '<option value="">Select Doctor...</option>';
+
+            allDoctors.forEach(doc => {
+                // Populate Dropdowns
+                const option = new Option(doc.name, doc.name);
+                selectBox.add(option);
+                scheduleBox.add(new Option(doc.name, doc.name));
+
+                // Manage List
+                listContainer.innerHTML += `
+                    <div class="doc-list-item">
+                        <div><strong>${doc.name}</strong><br><small style="color:#666;">${doc.specialization}</small></div>
+                        <button class="delete-btn" onclick="deleteDoctor('${doc._id}')"><i class="fas fa-trash"></i></button>
+                    </div>`;
+
+                // Availability Card (DUAL SHIFT UPDATE)
+                const isActive = doc.isAvailable;
+                const statusClass = isActive ? 'active' : 'inactive';
+                const checkedState = isActive ? 'checked' : '';
+                const statusLabel = isActive ? '<span style="color:green; font-weight:bold;">Available</span>' : '<span style="color:red; font-weight:bold;">Unavailable</span>';
+
+                // Defaults if fields are missing
+                const s1 = doc.startTime1 || "10:00";
+                const e1 = doc.endTime1 || "13:00";
+                const s2 = doc.startTime2 || "17:00";
+                const e2 = doc.endTime2 || "21:00";
+
+                availContainer.innerHTML += `
+                    <div class="status-row ${statusClass}" id="card-${doc._id}">
+                        <div class="status-header">
+                            <div><strong>${doc.name}</strong><div style="font-size:0.8rem;">Status: <span id="label-${doc._id}">${statusLabel}</span></div></div>
+                            <label class="switch">
+                                <input type="checkbox" id="toggle-${doc._id}" ${checkedState} onchange="updateSchedule('${doc._id}', true)">
+                                <span></span>
+                            </label>
+                        </div>
+                        
+                        <div class="time-controls" style="margin-top:10px;">
+                            <span style="font-size:0.8rem; width:60px; display:inline-block;">☀ Morning:</span>
+                            <input type="time" id="start1-${doc._id}" class="time-input" value="${s1}">
+                            <span style="font-size:0.8rem;">to</span>
+                            <input type="time" id="end1-${doc._id}" class="time-input" value="${e1}">
+                        </div>
+
+                        <div class="time-controls" style="margin-top:5px;">
+                            <span style="font-size:0.8rem; width:60px; display:inline-block;">☾ Evening:</span>
+                            <input type="time" id="start2-${doc._id}" class="time-input" value="${s2}">
+                            <span style="font-size:0.8rem;">to</span>
+                            <input type="time" id="end2-${doc._id}" class="time-input" value="${e2}">
+                        </div>
+
+                        <div style="text-align:right; margin-top:10px;">
+                            <button class="update-btn" id="btn-${doc._id}" onclick="updateSchedule('${doc._id}', false)">Update Shifts</button>
+                        </div>
+                    </div>`;
+            });
+        } catch (err) { console.error("Error loading doctors", err); }
+    }
+
+    async function updateSchedule(docId, isToggle) {
+        const isAvailable = document.getElementById(`toggle-${docId}`).checked;
+        
+        // Capture all 4 time inputs
+        const startTime1 = document.getElementById(`start1-${docId}`).value;
+        const endTime1 = document.getElementById(`end1-${docId}`).value;
+        const startTime2 = document.getElementById(`start2-${docId}`).value;
+        const endTime2 = document.getElementById(`end2-${docId}`).value;
+
+        const btn = document.getElementById(`btn-${docId}`);
+        const card = document.getElementById(`card-${docId}`);
+        const label = document.getElementById(`label-${docId}`);
+
+        if(isAvailable) {
+            card.className = "status-row active";
+            label.innerHTML = '<span style="color:green; font-weight:bold;">Available</span>';
+        } else {
+            card.className = "status-row inactive";
+            label.innerHTML = '<span style="color:red; font-weight:bold;">Unavailable</span>';
+        }
+
+        if(!isToggle) btn.innerText = "Saving...";
+
+        // Send all fields to Backend
+        await fetch(`${API_URL}/doctors/${docId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isAvailable, startTime1, endTime1, startTime2, endTime2 })
+        });
+
+        if(!isToggle) {
+            btn.innerText = "Saved!";
+            setTimeout(() => btn.innerText = "Update Shifts", 2000);
+        }
+    }
+
+    // ----------------------------------------------------
+    // 2. CHECK DOCTOR SCHEDULE (UPDATED FOR DUAL SHIFTS)
+    // ----------------------------------------------------
+    // ----------------------------------------------------
+    // 2. CHECK DOCTOR SCHEDULE (Updated: Split Sections)
+    // ----------------------------------------------------
+    async function checkSchedule() {
+        const docName = document.getElementById('scheduleDocSelect').value;
+        const date = document.getElementById('scheduleDate').value;
+        const gridContainer = document.getElementById('scheduleGrid'); // Ensure your HTML ID matches
+
+        if (!docName || !date) return;
+
+        gridContainer.innerHTML = '<p style="text-align:center; padding:20px;">Loading schedule...</p>';
+        gridContainer.style.display = "block"; // Ensure container is visible
+
+        const doctorObj = allDoctors.find(d => d.name === docName);
+        if (!doctorObj) return;
+
+        try {
+            // 1. Fetch Appointments
+            const res = await fetch(`${API_URL}/appointments`);
+            const allAppts = await res.json();
+            
+            // 2. Map Booked Slots
+            const bookings = allAppts.filter(a => a.date === date && a.doctor === docName);
+            const bookedMap = {};
+            bookings.forEach(b => bookedMap[b.timeSlot] = b.patientName); 
+
+            // 3. Generate Slots for Shifts
+            const morningSlots = createTimeSlots(doctorObj.startTime1 || "10:00", doctorObj.endTime1 || "13:00");
+            const eveningSlots = createTimeSlots(doctorObj.startTime2 || "17:00", doctorObj.endTime2 || "21:00");
+
+            // 4. Render Helper Function
+            const renderGridHTML = (slots) => {
+                if (slots.length === 0) return '<div class="empty-msg">No slots scheduled.</div>';
+                
+                return slots.map(slot => {
+                    const isBooked = bookedMap.hasOwnProperty(slot);
+                    if (isBooked) {
+                        return `<div class="grid-slot booked">
+                                    <strong>${slot}</strong><br>
+                                    <span style="font-size:0.7rem; display:block; margin-top:2px;">${bookedMap[slot]}</span>
+                                </div>`;
+                    } else {
+                        return `<div class="grid-slot available">
+                                    <strong>${slot}</strong><br>
+                                    <span style="color:green;">Free</span>
+                                </div>`;
+                    }
+                }).join('');
+            };
+
+            // 5. Inject HTML with 2 Sections
+            gridContainer.innerHTML = `
+                <div class="shift-section">
+                    <div class="shift-header"><i class="fas fa-sun"></i> Morning Shift</div>
+                    <div class="shift-grid">
+                        ${renderGridHTML(morningSlots)}
+                    </div>
+                </div>
+
+                <div class="shift-section">
+                    <div class="shift-header"><i class="fas fa-moon"></i> Evening Shift</div>
+                    <div class="shift-grid">
+                        ${renderGridHTML(eveningSlots)}
+                    </div>
+                </div>
+            `;
+
+        } catch (err) { 
+            console.error(err); 
+            gridContainer.innerHTML = "<p style='color:red; text-align:center;'>Error loading data.</p>";
+        }
+    }
+
+    // Helper for Time Slots (15 min intervals to match frontend)
+    function createTimeSlots(startStr, endStr) {
+        const slots = [];
+        let start = parseTime(startStr);
+        let end = parseTime(endStr);
+        while (start < end) {
+            slots.push(minutesToTime(start));
+            start += 15; // Set to 15 mins to match client
+        }
+        return slots;
+    }
+
+    function parseTime(t) {
+        if(!t) return 0;
+        const [h, m] = t.split(':').map(Number);
+        return h * 60 + m;
+    }
+    
+    function minutesToTime(mins) {
+        let h = Math.floor(mins / 60);
+        let m = mins % 60;
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12; h = h ? h : 12;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`;
+    }
+
+    // ----------------------------------------------------
+    // 3. APPOINTMENT TABLE & WALKIN (Standard Logic)
+    // ----------------------------------------------------
+    async function loadAppointments() {
+        const selectedDate = document.getElementById('viewDate').value;
+        const tableBody = document.getElementById('appointmentTableBody');
+        const noMsg = document.getElementById('noDataMsg');
+        
+        try {
+            const res = await fetch(`${API_URL}/appointments`);
+            const allAppts = await res.json();
+            let filtered = allAppts.filter(a => a.date === selectedDate);
+            
+            // Sort by time
+            filtered.sort((a, b) => parseTime(convert12to24(a.timeSlot)) - parseTime(convert12to24(b.timeSlot)));
+
+            tableBody.innerHTML = "";
+            if(filtered.length === 0) { noMsg.style.display = 'block'; } 
+            else {
+                noMsg.style.display = 'none';
+                filtered.forEach(appt => {
+                    const isWalkin = appt.type === 'Walk-in';
+                    const badge = isWalkin ? '<span class="badge-walkin">WALK-IN</span>' : '<span class="badge-online">ONLINE</span>';
+                    const txn = isWalkin ? '-' : `<span class="txn-id">ID: ${appt.transactionId}</span>`;
+                    tableBody.innerHTML += `
+                    <tr>
+                        <td><strong>${appt.timeSlot}</strong></td>
+                        <td>${appt.patientName}<br><small style="color:#666;">Ph: ${appt.phone}</small></td>
+                        <td>${appt.doctor}</td>
+                        <td>${badge} ${txn}</td>
+                        <td><span style="color:green; font-weight:bold;">${appt.paymentStatus}</span></td>
+                    </tr>`;
+                });
+            }
+        } catch (err) { console.error(err); }
+    }
+
+    function convert12to24(time12h) {
+        if(!time12h) return "00:00";
+        const [time, modifier] = time12h.split(' ');
+        let [hours, minutes] = time.split(':');
+        if (hours === '12') hours = '00';
+        if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
+        return `${hours}:${minutes}`;
+    }
+
+    async function addWalkin(e) {
+        e.preventDefault();
+        const data = {
+            patientName: document.getElementById('pName').value,
+            phone: document.getElementById('pPhone').value,
+            age: document.getElementById('pAge').value,
+            doctor: document.getElementById('pDoctor').value,
+            date: document.getElementById('pDate').value,
+            timeSlot: document.getElementById('pTime').value,
+            type: 'Walk-in',
+            fee: '₹500',
+            paymentStatus: 'Paid',
+            transactionId: 'CASH-' + Math.floor(Math.random()*1000)
+        };
+        await fetch(`${API_URL}/appointments`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+        alert("✅ Walk-in Saved!");
+        e.target.reset();
+        loadAppointments();
+    }
+
+    async function addNewDoctor() {
+        const name = document.getElementById('newDocName').value;
+        const spec = document.getElementById('newDocSpec').value;
+        if(!name || !spec) return alert("Fill Name & Spec");
+        
+        // Updated Default Payload
+        await fetch(`${API_URL}/doctors`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                name, 
+                specialization: spec, 
+                qualifications: "MBBS", 
+                experience: "5 Yrs", 
+                startTime1: "10:00", endTime1: "13:00",
+                startTime2: "17:00", endTime2: "21:00"
+            })
+        });
+        document.getElementById('newDocName').value = "";
+        document.getElementById('newDocSpec').value = "";
+        fetchDoctors();
+    }
+
+    async function deleteDoctor(id) {
+        if(confirm("Delete this doctor?")) {
+            await fetch(`${API_URL}/doctors/${id}`, { method: 'DELETE' });
+            fetchDoctors();
+        }
+    }
+
+    // INIT
+    fetchDoctors();
+    loadAppointments();
+    setInterval(loadAppointments, 5000); 
+</script>
+</body>
+</html>

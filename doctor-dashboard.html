@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard | Bhakti Lok</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #f4f7f6; }
+        .dash-nav { background: #2c3e50; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
+        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
+        
+        .toggle-switch { display: flex; align-items: center; justify-content: space-between; background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
+        /* Walk-in Highlight Class */
+        .new-walkin-row { background-color: #fff8e1; border-left: 5px solid #ffc107; }
+        
+        .appt-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+    </style>
+</head>
+<body>
+
+    <div class="dash-nav">
+        <div><i class="fas fa-user-md"></i> <span id="docName">Doctor's Portal</span></div>
+        <a href="staff-login.html" style="color:white; opacity:0.7;">Logout</a>
+    </div>
+
+    <div class="container">
+        
+        <div class="toggle-switch">
+            <div>
+                <h3 style="margin:0;">My Availability Status</h3>
+                <p style="margin:5px 0 0; color:#666; font-size:0.9rem;">Turn OFF if you are handling an emergency.</p>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="myStatusToggle" onchange="toggleMyStatus(this)">
+                <span id="statusLabel" style="font-weight:bold; color:green;">Available</span>
+            </label>
+        </div>
+
+        <div style="margin-bottom:20px; text-align:right;">
+            <label>View Date: </label>
+            <input type="date" id="docDate" style="padding:8px; border-radius:5px; border:1px solid #ccc;" onchange="loadDocAppointments()">
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 10px;">
+            <h3 style="border-bottom: 1px solid #eee; padding-bottom: 10px;">My Appointments</h3>
+            <div id="docApptList">
+                </div>
+            <p id="docNoData" style="text-align:center; color:#999; display:none;">No patients scheduled.</p>
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:5000/api/appointments";
+        const currentUser = localStorage.getItem('currentUser') || 'Dr. Mansi'; 
+        document.getElementById('docName').innerText = currentUser;
+
+        const myStatusKey = currentUser.includes('Mansi') ? 'status_Dr_Mansi' : 'status_Dr_Amol';
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('docDate').value = today;
+
+        // --- STATUS SYNC LOGIC ---
+        function syncMyStatus() {
+            let isAvailable = JSON.parse(localStorage.getItem(myStatusKey));
+            if (isAvailable === null) isAvailable = true; 
+            
+            const toggle = document.getElementById('myStatusToggle');
+            toggle.checked = isAvailable;
+            
+            const label = document.getElementById('statusLabel');
+            if(isAvailable) {
+                label.innerHTML = '<span style="font-weight:bold; color:green;">Available</span>';
+            } else {
+                label.innerHTML = '<span style="font-weight:bold; color:red;">Unavailable</span>';
+            }
+        }
+
+        function toggleMyStatus(checkbox) {
+            localStorage.setItem(myStatusKey, checkbox.checked);
+            syncMyStatus(); 
+        }
+
+        // --- APPOINTMENTS LOGIC (FROM MONGODB) ---
+        
+        function timeToMinutes(timeStr) {
+            const [time, modifier] = timeStr.split(' ');
+            let [hours, minutes] = time.split(':');
+            if (hours === '12') hours = '00';
+            if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
+            return parseInt(hours, 10) * 60 + parseInt(minutes, 10);
+        }
+
+        async function loadDocAppointments() {
+            const viewDate = document.getElementById('docDate').value;
+            const listDiv = document.getElementById('docApptList');
+            const noData = document.getElementById('docNoData');
+            
+            try {
+                // GET Data from Server
+                const response = await fetch(API_URL);
+                const allAppts = await response.json();
+                
+                // Filter: Match Doctor Name AND Date
+                const myAppts = allAppts.filter(a => a.doctor.includes(currentUser) && a.date === viewDate);
+
+                // Sort
+                myAppts.sort((a, b) => timeToMinutes(a.timeSlot) - timeToMinutes(b.timeSlot));
+
+                listDiv.innerHTML = "";
+                
+                if(myAppts.length === 0) {
+                    noData.style.display = 'block';
+                } else {
+                    noData.style.display = 'none';
+                    
+                    myAppts.forEach(appt => {
+                        const highlightClass = appt.type === 'Walk-in' ? 'new-walkin-row' : '';
+                        const badge = appt.type === 'Walk-in' ? '🔔 <strong>NEW WALK-IN</strong>' : 'Online Booking';
+
+                        const card = `
+                        <div class="appt-card ${highlightClass}">
+                            <div>
+                                <div style="font-size:1.1rem; font-weight:bold;">${appt.timeSlot} - ${appt.patientName}</div>
+                                <div style="color:#666; font-size:0.9rem;">Age: ${appt.age} | Ph: ${appt.phone || 'N/A'}</div>
+                                <div style="color:#d9534f; font-size:0.8rem; margin-top:5px;">${badge}</div>
+                            </div>
+                            <button class="btn-small">View History</button>
+                        </div>`;
+                        listDiv.innerHTML += card;
+                    });
+                }
+            } catch (error) {
+                console.error("Error loading doctor appointments:", error);
+            }
+        }
+
+        // Initial Load
+        syncMyStatus();
+        loadDocAppointments();
+
+        // Loops
+        setInterval(syncMyStatus, 1000); 
+        setInterval(loadDocAppointments, 3000); 
+    </script>
+</body>
+</html>

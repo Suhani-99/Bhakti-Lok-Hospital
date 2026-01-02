@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login | Bhakti Lok Hospital</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .login-container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        .role-selector { display: flex; gap: 10px; margin-bottom: 20px; background: #eee; padding: 5px; border-radius: 5px; }
+        .role-btn { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; border-radius: 5px; font-weight: bold; color: #666; transition: 0.3s; }
+        .role-btn.active { background: white; color: var(--primary-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { font-size: 0.9rem; color: #333; display: block; margin-bottom: 5px; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 10px;">
+            <i class="fas fa-hospital-user"></i>
+        </div>
+        <h2 style="margin-bottom: 5px; color: #333;">Staff Portal</h2>
+        
+        <div class="role-selector">
+            <button class="role-btn active" onclick="switchRole('reception')">Receptionist</button>
+            <button class="role-btn" onclick="switchRole('doctor')">Doctor</button>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            
+            <div id="doctorSelectDiv" class="input-group hidden">
+                <label>Select Doctor</label>
+                <select id="selectedDoctor">
+                    <option value="mansi">Dr. Mansi Shanghavi</option>
+                    <option value="amol">Dr. Amol</option>
+                </select>
+            </div>
+
+            <div id="idInputDiv" class="input-group">
+                <label>Username / ID</label>
+                <input type="text" id="username" placeholder="Enter ID">
+            </div>
+
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter Password" required>
+            </div>
+            <button type="submit" class="btn-full">Secure Login</button>
+        </form>
+
+        <p style="margin-top: 20px; font-size: 0.85rem; color: #888;">
+            <a href="index.html" style="color: #666; text-decoration: none;">← Back to Hospital Website</a>
+        </p>
+    </div>
+
+    <script>
+        let currentRole = 'reception';
+
+        function switchRole(role) {
+            currentRole = role;
+            document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/Hide Doctor Selection
+            if(role === 'doctor') {
+                document.getElementById('doctorSelectDiv').classList.remove('hidden');
+                document.getElementById('idInputDiv').classList.add('hidden');
+            } else {
+                document.getElementById('doctorSelectDiv').classList.add('hidden');
+                document.getElementById('idInputDiv').classList.remove('hidden');
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('password').value;
+            const doc = document.getElementById('selectedDoctor').value;
+
+            // RECEPTION LOGIN
+            if(currentRole === 'reception' && pass === 'admin123') {
+                localStorage.setItem('currentUser', 'Receptionist');
+                window.location.href = "reception-dashboard.html"; 
+            } 
+            // DOCTOR MANSI LOGIN
+            else if(currentRole === 'doctor' && doc === 'mansi' && pass === 'mansi123') {
+                localStorage.setItem('currentUser', 'Dr. Mansi');
+                window.location.href = "doctor-dashboard.html"; 
+            } 
+            // DOCTOR AMOL LOGIN
+            else if(currentRole === 'doctor' && doc === 'amol' && pass === 'amol123') {
+                localStorage.setItem('currentUser', 'Dr. Amol');
+                window.location.href = "doctor-dashboard.html"; 
+            } 
+            else {
+                alert("Invalid Password!");
+            }
+        }
+    </script>
+</body>
+</html>

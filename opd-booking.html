@@ -6,6 +6,29 @@
     <title>OPD Booking | Bhakti Lok Hospital</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Styles for Dynamic Slots */
+        .slot-btn.booked {
+            background-color: #e0e0e0;
+            color: #999;
+            border-color: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        /* Highlight selected slot */
+        .slot-btn.selected {
+            background-color: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+            transform: scale(1.05);
+        }
+        .slot-loader {
+            text-align: center;
+            color: var(--primary-blue);
+            font-weight: bold;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -87,27 +110,27 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label>Phone Number *</label>
-                                    <input type="tel" class="input-padded" placeholder="10-digit Mobile" required>
+                                    <input type="tel" id="pPhone" class="input-padded" placeholder="10-digit Mobile" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Age *</label>
-                                    <input type="number" class="input-padded" placeholder="Years" required>
+                                    <input type="number" id="pAge" class="input-padded" placeholder="Years" required>
                                 </div>
                             </div>
                             
                             <div class="form-group">
                                 <label>Current Symptoms (Chief Complaint) *</label>
-                                <textarea class="input-padded" placeholder="E.g., High fever since 2 days, stomach pain..." rows="2" required></textarea>
+                                <textarea id="pSym" class="input-padded" placeholder="E.g., High fever since 2 days, stomach pain..." rows="2" required></textarea>
                             </div>
                             
                             <div class="form-group">
                                 <label>Current Medications</label>
-                                <textarea class="input-padded" placeholder="List any medicines you are currently taking..." rows="2"></textarea>
+                                <textarea id="pMeds" class="input-padded" placeholder="List any medicines you are currently taking..." rows="2"></textarea>
                             </div>
 
                             <div class="form-group">
                                 <label>Past Medical History</label>
-                                <textarea class="input-padded" placeholder="E.g., Diabetes, Hypertension, Previous Surgeries..." rows="2"></textarea>
+                                <textarea id="pHist" class="input-padded" placeholder="E.g., Diabetes, Hypertension, Previous Surgeries..." rows="2"></textarea>
                             </div>
 
                             <button type="submit" class="btn-full">Next: Select Doctor <i class="fas fa-arrow-right"></i></button>
@@ -120,17 +143,8 @@
                             <p>Select a doctor to view profile</p>
                         </div>
                         <div style="padding: 30px;">
-                            <div class="doctor-selection-grid">
-                                <div class="doctor-card" onclick="showDoctorProfile('amol')">
-                                    <img src="images/home-page.png" alt="Dr Amol" class="doc-thumb-large">
-                                    <h4>Dr. Amol</h4>
-                                    <p>General Physician & Surgeon</p>
-                                </div>
-                                <div class="doctor-card" onclick="showDoctorProfile('mansi')">
-                                    <img src="images/dr-mansi.png" alt="Dr Mansi" class="doc-thumb-large">
-                                    <h4>Dr. Mansi Shanghavi</h4>
-                                    <p>Gynaecologist</p>
-                                </div>
+                            <div class="doctor-selection-grid" id="dynamicDoctorGrid">
+                                <p style="text-align:center; color:#666;">Loading Doctors from Database...</p>
                             </div>
                             <button onclick="goBack('step2-doctors', 'step1-form')" class="btn-text">Back</button>
                         </div>
@@ -144,7 +158,7 @@
                         <div style="padding: 30px;">
                             
                             <div class="full-doc-profile">
-                                <img id="prof-img" src="" class="prof-img-large">
+                                <img id="prof-img" src="images/reception.png" class="prof-img-large" onerror="this.src='images/reception.png'">
                                 <div class="prof-info">
                                     <h2 id="prof-name">Doctor Name</h2>
                                     <p id="prof-spec" style="color:var(--primary-blue); font-weight:bold;">Speciality</p>
@@ -152,8 +166,8 @@
                                         <span><i class="fas fa-graduation-cap"></i> <span id="prof-qual">MBBS</span></span>
                                         <span><i class="fas fa-briefcase"></i> <span id="prof-exp">10 Yrs</span></span>
                                     </div>
-                                    <p style="font-size:0.9rem; color:#666; margin-top:10px;">
-                                        Highly experienced specialist dedicated to patient care and advanced treatment methodologies.
+                                    <p id="prof-bio" style="font-size:0.9rem; color:#666; margin-top:10px;">
+                                        Highly experienced specialist dedicated to patient care.
                                     </p>
                                 </div>
                             </div>
@@ -162,14 +176,11 @@
 
                             <div id="calendar-area">
                                 <h4 style="margin-bottom:10px;">Select Appointment Date:</h4>
-                                <input type="date" id="appDate" class="input-padded" onchange="showSlots()">
+                                <input type="date" id="appDate" class="input-padded" onchange="generateSlots()">
                                 
                                 <div id="slots-area" style="display:none; margin-top:20px;">
                                     <h4 style="margin-bottom:10px;">Available Slots:</h4>
-                                    <div class="time-slots">
-                                        <button class="slot-btn" onclick="selectSlot('10:00 AM')">10:00 AM</button>
-                                        <button class="slot-btn" onclick="selectSlot('11:30 AM')">11:30 AM</button>
-                                        <button class="slot-btn" onclick="selectSlot('06:00 PM')">06:00 PM</button>
+                                    <div class="time-slots" id="slots-container">
                                     </div>
                                 </div>
                             </div>
@@ -228,7 +239,7 @@
                 <p><strong>Transaction ID:</strong> <span id="txn-id">TXN123456</span></p>
                 <div class="token-display">
                     <small>Your Token Number</small>
-                    <h1>BLH-402</h1>
+                    <h1 id="token-display">BLH-402</h1> 
                 </div>
                 <p style="font-size:0.9rem; color:#555;">Please show this token at the reception.</p>
             </div>
@@ -238,77 +249,257 @@
     </div>
 
     <script>
+        const API_URL = "http://localhost:5000/api";
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('appDate').min = today;
+
         let bookingData = {
-            patientName: "",
-            doctorName: "",
-            date: "",
-            time: ""
+            patientName: "", phone: "", age: "", symptoms: "", medications: "", history: "",
+            doctorName: "", date: "", time: ""
         };
+        let selectedDoctorObj = null; // Store doctor details for shift calc
 
         function goBack(current, target) {
             document.getElementById(current).style.display = 'none';
             document.getElementById(target).style.display = 'block';
         }
 
-        // Step 1 -> Step 2
         function goToStep2(e) {
             e.preventDefault();
+            
+            // Capture Data
             bookingData.patientName = document.getElementById('pName').value;
+            bookingData.phone = document.getElementById('pPhone').value;
+            bookingData.age = document.getElementById('pAge').value;
+            bookingData.symptoms = document.getElementById('pSym').value;
+            bookingData.medications = document.getElementById('pMeds').value;
+            bookingData.history = document.getElementById('pHist').value;
+            
+            fetchDoctors();
             document.getElementById('step1-form').style.display = 'none';
             document.getElementById('step2-doctors').style.display = 'block';
         }
 
-        // Step 2 -> Step 3
-        function showDoctorProfile(docKey) {
-            const docs = {
-                'amol': { name: 'Dr. Amol', spec: 'General Physician', qual: 'MBBS, MD', exp: '8+ Yrs', img: 'images/home-page.png' },
-                'mansi': { name: 'Dr. Mansi Shanghavi', spec: 'Gynaecologist', qual: 'MBBS, MS', exp: '10+ Yrs', img: 'images/dr-mansi.png' }
-            };
-            const data = docs[docKey];
-            bookingData.doctorName = data.name;
+        // --- 1. DYNAMIC DOCTOR FETCHING ---
+        async function fetchDoctors() {
+            try {
+                const res = await fetch(`${API_URL}/doctors`);
+                const doctors = await res.json();
+                
+                const grid = document.getElementById('dynamicDoctorGrid');
+                grid.innerHTML = ""; 
+                
+                if (doctors.length === 0) {
+                    grid.innerHTML = "<p>No doctors available at the moment.</p>";
+                    return;
+                }
 
-            document.getElementById('prof-name').innerText = data.name;
-            document.getElementById('prof-spec').innerText = data.spec;
-            document.getElementById('prof-qual').innerText = data.qual;
-            document.getElementById('prof-exp').innerText = data.exp;
-            document.getElementById('prof-img').src = data.img;
+                doctors.forEach(doc => {
+                    const card = document.createElement('div');
+                    card.className = "doctor-card";
+                    card.onclick = () => selectDoctor(doc);
+                    
+                    const imgSrc = doc.image || 'images/reception.png';
+                    const shiftDisplay = (doc.startTime && doc.endTime) 
+                        ? `<small style="color:green;">${formatTime(doc.startTime)} - ${formatTime(doc.endTime)}</small>` 
+                        : '<small>Standard Shift</small>';
+
+                    card.innerHTML = `
+                        <img src="${imgSrc}" class="doc-thumb-large" onerror="this.src='images/reception.png'">
+                        <h4>${doc.name}</h4>
+                        <p>${doc.specialization}</p>
+                        ${shiftDisplay}
+                    `;
+                    grid.appendChild(card);
+                });
+
+            } catch (err) { 
+                console.error("Error loading doctors", err);
+                document.getElementById('dynamicDoctorGrid').innerHTML = "<p style='color:red;'>Failed to load doctors. Is server running?</p>";
+            }
+        }
+
+        // --- 2. SELECTION LOGIC ---
+        function selectDoctor(doc) {
+            selectedDoctorObj = doc; // Store for logic
+            bookingData.doctorName = doc.name;
+
+            document.getElementById('prof-name').innerText = doc.name;
+            document.getElementById('prof-spec').innerText = doc.specialization;
+            document.getElementById('prof-qual').innerText = doc.qualifications;
+            document.getElementById('prof-exp').innerText = doc.experience;
+            document.getElementById('prof-bio').innerText = doc.bio || "Highly experienced specialist dedicated to patient care.";
+            document.getElementById('prof-img').src = doc.image || 'images/reception.png';
 
             document.getElementById('step2-doctors').style.display = 'none';
             document.getElementById('step3-profile').style.display = 'block';
         }
 
-        // Show slots
-        function showSlots() {
-            if(document.getElementById('appDate').value) {
-                document.getElementById('slots-area').style.display = 'block';
-                bookingData.date = document.getElementById('appDate').value;
+        // --- 3. DYNAMIC SLOT GENERATION ---
+        async function generateSlots() {
+            const dateInput = document.getElementById('appDate').value;
+            const slotContainer = document.getElementById('slots-container');
+            
+            if(!dateInput || !selectedDoctorObj) return;
+            bookingData.date = dateInput;
+
+            document.getElementById('slots-area').style.display = 'block';
+            slotContainer.innerHTML = '<div class="slot-loader">Checking Availability...</div>';
+
+            // 1. Check Doctor Availability Toggle
+            if(selectedDoctorObj.isAvailable === false) {
+                slotContainer.innerHTML = "<p style='color:red;'>Doctor is unavailable today.</p>";
+                return;
+            }
+
+            try {
+                // 2. Fetch Existing Bookings from DB
+                const res = await fetch(`${API_URL}/appointments`);
+                const allAppts = await res.json();
+                
+                // Get list of times that are ALREADY BOOKED for this Doctor + Date
+                const bookedSlots = allAppts
+                    .filter(a => a.date === dateInput && a.doctor === selectedDoctorObj.name)
+                    .map(a => a.timeSlot); // e.g. ["10:00 AM", "10:15 AM"]
+
+                // 3. Calculate Slots based on Doctor's Specific Shift
+                // If DB has no time, fallback to 10:00 - 17:00
+                const startStr = selectedDoctorObj.startTime || "10:00";
+                const endStr = selectedDoctorObj.endTime || "17:00";
+                
+                // GENERATE
+                const slots = createTimeSlots(startStr, endStr, 15); // 15 Minute Interval
+
+                // 4. Render Buttons
+                slotContainer.innerHTML = "";
+                if(slots.length === 0) {
+                    slotContainer.innerHTML = "<p>No slots available.</p>";
+                    return;
+                }
+
+                slots.forEach(slot => {
+                    const btn = document.createElement('button');
+                    btn.className = "slot-btn";
+                    btn.innerText = slot;
+
+                    // GRAY OUT LOGIC: Check if this slot is in the booked list
+                    if(bookedSlots.includes(slot)) {
+                        btn.classList.add('booked'); // CSS makes it gray & unclickable
+                        btn.disabled = true;
+                        btn.title = "Slot Already Booked";
+                    } else {
+                        // Clickable
+                        btn.onclick = () => selectSlot(slot, btn);
+                    }
+                    slotContainer.appendChild(btn);
+                });
+
+            } catch (err) {
+                console.error(err);
+                slotContainer.innerHTML = "<p style='color:red'>Error loading slots.</p>";
             }
         }
 
-        // Step 3 -> Step 4
-        function selectSlot(time) {
+        // --- HELPER: TIME MATH (15 MINS) ---
+        function createTimeSlots(startStr, endStr, intervalMins) {
+            const slots = [];
+            let currentMins = parseTime(startStr);
+            let endMins = parseTime(endStr);
+
+            while (currentMins < endMins) {
+                slots.push(minutesToTime(currentMins));
+                currentMins += intervalMins; // Add 15 mins
+            }
+            return slots;
+        }
+
+        // Convert "14:00" -> 840 minutes
+        function parseTime(t) {
+            if(!t) return 0;
+            const [h, m] = t.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        // Convert 840 -> "02:00 PM"
+        function minutesToTime(mins) {
+            let h = Math.floor(mins / 60);
+            let m = mins % 60;
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            h = h % 12; 
+            if(h === 0) h = 12; 
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`;
+        }
+
+        // Simple formatter for the card display (e.g. 14:00 -> 02:00 PM)
+        function formatTime(time24) {
+            return minutesToTime(parseTime(time24));
+        }
+
+        // --- 4. HANDLE SELECTION & PAYMENT ---
+        function selectSlot(time, btnElement) {
             bookingData.time = time;
+            
+            // Visual Highlight
+            document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+            btnElement.classList.add('selected');
+
+            // Fill Overview
             document.getElementById('sum-pname').innerText = bookingData.patientName;
             document.getElementById('sum-doc').innerText = bookingData.doctorName;
             document.getElementById('sum-date').innerText = bookingData.date;
             document.getElementById('sum-time').innerText = bookingData.time;
 
-            document.getElementById('step3-profile').style.display = 'none';
-            document.getElementById('step4-overview').style.display = 'block';
+            // Move to Payment Step
+            setTimeout(() => {
+                document.getElementById('step3-profile').style.display = 'none';
+                document.getElementById('step4-overview').style.display = 'block';
+            }, 300);
         }
 
-        // Step 4 -> Success
-        function processPayment() {
+        async function processPayment() {
             const btn = document.querySelector('#step4-overview .btn-full');
-            btn.innerText = "Contacting Payment Gateway...";
-            btn.style.opacity = "0.7";
+            btn.innerText = "Processing...";
+            btn.disabled = true;
 
-            setTimeout(() => {
-                const txnId = "TXN" + Math.floor(Math.random() * 10000000);
-                document.getElementById('txn-id').innerText = txnId;
-                document.getElementById('booking-interface').style.display = 'none';
-                document.getElementById('final-success').style.display = 'flex';
-            }, 2000);
+            const txnId = "TXN" + Date.now() + Math.floor(Math.random() * 1000);
+            
+            // Simulate Gateway
+            await new Promise(r => setTimeout(r, 2000));
+
+            // --- CHANGED SECTION HERE ---
+            // Mapping doctorName -> doctor AND time -> timeSlot
+            const payload = {
+                ...bookingData,
+                doctor: bookingData.doctorName, // Corrected Key for Backend
+                timeSlot: bookingData.time,     // Corrected Key for Backend
+                type: 'Online',
+                paymentStatus: 'Paid',
+                fee: '₹500',
+                transactionId: txnId
+            };
+            // ----------------------------
+
+            try {
+                const response = await fetch(`${API_URL}/appointments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    document.getElementById('txn-id').innerText = txnId;
+                    document.getElementById('token-display').innerText = "BLH-" + Math.floor(Math.random() * 999);
+                    
+                    document.getElementById('step4-overview').style.display = 'none';
+                    document.getElementById('final-success').style.display = 'flex';
+                } else {
+                    alert("System Error: Could not save booking.");
+                }
+            } catch (error) {
+                alert("Network Error.");
+                btn.disabled = false;
+                btn.innerText = "Pay Now";
+            }
         }
     </script>
 </body>

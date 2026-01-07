@@ -7,27 +7,30 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        body { background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; font-family: 'Segoe UI', sans-serif; }
         .login-container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
         .role-selector { display: flex; gap: 10px; margin-bottom: 20px; background: #eee; padding: 5px; border-radius: 5px; }
         .role-btn { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; border-radius: 5px; font-weight: bold; color: #666; transition: 0.3s; }
-        .role-btn.active { background: white; color: var(--primary-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .role-btn.active { background: white; color: #007bff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         .input-group { margin-bottom: 15px; text-align: left; }
         .input-group label { font-size: 0.9rem; color: #333; display: block; margin-bottom: 5px; }
-        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         .hidden { display: none; }
+        .btn-full { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; margin-top: 10px; }
+        .btn-full:hover { background: #0056b3; }
+        .error-msg { color: #dc3545; font-size: 0.9rem; margin-top: 15px; display: none; }
     </style>
 </head>
 <body>
 
     <div class="login-container">
-        <div style="font-size: 3rem; color: var(--primary-blue); margin-bottom: 10px;">
+        <div style="font-size: 3rem; color: #007bff; margin-bottom: 10px;">
             <i class="fas fa-hospital-user"></i>
         </div>
         <h2 style="margin-bottom: 5px; color: #333;">Staff Portal</h2>
         
         <div class="role-selector">
-            <button class="role-btn active" onclick="switchRole('reception')">Receptionist</button>
+            <button class="role-btn active" onclick="switchRole('reception')">Receptionist / Admin</button>
             <button class="role-btn" onclick="switchRole('doctor')">Doctor</button>
         </div>
 
@@ -36,21 +39,22 @@
             <div id="doctorSelectDiv" class="input-group hidden">
                 <label>Select Doctor</label>
                 <select id="selectedDoctor">
-                    <option value="mansi">Dr. Mansi Shanghavi</option>
-                    <option value="amol">Dr. Amol</option>
+                    <option value="">Loading Doctors...</option>
                 </select>
             </div>
 
             <div id="idInputDiv" class="input-group">
-                <label>Username / ID</label>
-                <input type="text" id="username" placeholder="Enter ID">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter Username (e.g. admin)">
             </div>
 
             <div class="input-group">
                 <label>Password</label>
                 <input type="password" id="password" placeholder="Enter Password" required>
             </div>
+            
             <button type="submit" class="btn-full">Secure Login</button>
+            <p id="errorMsg" class="error-msg"></p>
         </form>
 
         <p style="margin-top: 20px; font-size: 0.85rem; color: #888;">
@@ -59,45 +63,114 @@
     </div>
 
     <script>
+        const API_URL = "http://localhost:5000/api";
         let currentRole = 'reception';
 
+        // 1. Switch Logic
         function switchRole(role) {
             currentRole = role;
+            
+            // Visual Toggle
             document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // Show/Hide Doctor Selection
+            // Show/Hide Inputs
             if(role === 'doctor') {
                 document.getElementById('doctorSelectDiv').classList.remove('hidden');
                 document.getElementById('idInputDiv').classList.add('hidden');
+                fetchDoctorsForDropdown(); // Fetch names when doctor tab is clicked
             } else {
                 document.getElementById('doctorSelectDiv').classList.add('hidden');
                 document.getElementById('idInputDiv').classList.remove('hidden');
             }
         }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('password').value;
-            const doc = document.getElementById('selectedDoctor').value;
+        // 2. Fetch Doctors dynamically for the dropdown
+        async function fetchDoctorsForDropdown() {
+            const select = document.getElementById('selectedDoctor');
+            // Only fetch if empty or has "Loading..."
+            if (select.options.length > 1) return; 
 
-            // RECEPTION LOGIN
-            if(currentRole === 'reception' && pass === 'admin123') {
-                localStorage.setItem('currentUser', 'Receptionist');
-                window.location.href = "reception-dashboard.html"; 
-            } 
-            // DOCTOR MANSI LOGIN
-            else if(currentRole === 'doctor' && doc === 'mansi' && pass === 'mansi123') {
-                localStorage.setItem('currentUser', 'Dr. Mansi');
-                window.location.href = "doctor-dashboard.html"; 
-            } 
-            // DOCTOR AMOL LOGIN
-            else if(currentRole === 'doctor' && doc === 'amol' && pass === 'amol123') {
-                localStorage.setItem('currentUser', 'Dr. Amol');
-                window.location.href = "doctor-dashboard.html"; 
-            } 
-            else {
-                alert("Invalid Password!");
+            try {
+                const res = await fetch(`${API_URL}/doctors`);
+                const doctors = await res.json();
+                
+                select.innerHTML = ""; // Clear "Loading..."
+                
+                if(doctors.length === 0) {
+                    select.innerHTML = "<option>No doctors found</option>";
+                    return;
+                }
+
+                doctors.forEach(doc => {
+                    const option = document.createElement('option');
+                    option.value = doc.name; // Value is the Doctor's Name (Username)
+                    option.innerText = doc.name;
+                    select.appendChild(option);
+                });
+            } catch (err) {
+                console.error("Error loading doctors", err);
+                select.innerHTML = "<option>Error loading list</option>";
+            }
+        }
+
+        // 3. SECURE LOGIN LOGIC
+        async function handleLogin(e) {
+            e.preventDefault();
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.style.display = 'none';
+
+            let loginUsername = "";
+            const password = document.getElementById('password').value;
+
+            // Determine Username based on Role
+            if (currentRole === 'reception') {
+                loginUsername = document.getElementById('username').value;
+            } else {
+                loginUsername = document.getElementById('selectedDoctor').value;
+                if (!loginUsername) {
+                    errorMsg.innerText = "Please select a doctor.";
+                    errorMsg.style.display = 'block';
+                    return;
+                }
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: loginUsername, password: password })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // Success! Save Token & Data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('role', data.role);
+                    localStorage.setItem('user', data.username);
+                    
+                    // --- NEW: Save the Force Reset Flag ---
+                    if (data.forceReset) {
+                        localStorage.setItem('mustChangePassword', 'true');
+                    } else {
+                        localStorage.removeItem('mustChangePassword');
+                    }
+
+                    // Redirect based on backend role
+                    if (data.role === 'doctor') {
+                        window.location.href = "doctor-dashboard.html";
+                    } else {
+                        window.location.href = "reception-dashboard.html";
+                    }
+                } else {
+                    // Show Error (e.g., "Invalid password")
+                    errorMsg.innerText = data.error || "Login failed";
+                    errorMsg.style.display = 'block';
+                }
+            } catch (err) {
+                errorMsg.innerText = "Server Error. Is Backend running?";
+                errorMsg.style.display = 'block';
             }
         }
     </script>

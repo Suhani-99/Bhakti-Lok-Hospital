@@ -7,18 +7,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
     :root {
-        --primary-blue: #007bff; /* Ensure variable is defined */
+        --primary-blue: #007bff; 
     }
     
     body { background: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
     
-    .dash-nav { background: var(--primary-blue); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
+    /* --- HEADER FIX: Added gap to prevent overlapping --- */
+    .dash-nav { 
+        background: var(--primary-blue); 
+        padding: 15px 30px; 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        color: white; 
+        gap: 20px; /* Prevents crashing */
+        flex-wrap: wrap; 
+    }
+
     .dash-container { max-width: 1400px; margin: 30px auto; padding: 0 20px; display: grid; grid-template-columns: 1.2fr 2fr; gap: 25px; }
     
     .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 25px; }
     .card h3 { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; color: var(--primary-blue); font-size: 1.1rem; }
 
-    /* --- UPDATED: Dynamic Status Card for Dual Shifts --- */
+    /* Dynamic Status Card */
     .status-row { 
         display: flex; 
         flex-direction: column; 
@@ -28,7 +39,7 @@
         margin-bottom: 15px; 
         border-left: 5px solid #ccc; 
         transition: 0.3s;
-        gap: 8px; /* Adds space between Header, Morning Shift, and Evening Shift */
+        gap: 8px; 
     }
     
     .status-row.active { border-left-color: #28a745; background: #e8f5e9; }
@@ -40,7 +51,7 @@
         display: flex; 
         gap: 10px; 
         align-items: center; 
-        background: #ffffff; /* White background for better contrast */
+        background: #ffffff; 
         padding: 8px 12px; 
         border-radius: 6px; 
         border: 1px solid #e0e0e0;
@@ -50,7 +61,7 @@
         padding: 5px; 
         border: 1px solid #ccc; 
         border-radius: 4px; 
-        width: 95px; /* Slightly wider for ease of use */
+        width: 95px; 
         font-size: 0.85rem; 
         font-family: inherit;
     }
@@ -99,61 +110,70 @@
     .grid-slot.available { background: #e8f5e9; color: #155724; border-color: #c3e6cb; }
     .grid-slot.booked { background: #f8f9fa; color: #6c757d; border-color: #dee2e6; cursor: not-allowed; }
 
-    /* --- NEW STYLES for Split Shifts --- */
-.shift-section {
-    margin-bottom: 20px;
-    background: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #eee;
-}
+    /* Split Shifts Styles */
+    .shift-section {
+        margin-bottom: 20px;
+        background: #fff;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #eee;
+    }
 
-.shift-header {
-    font-size: 0.9rem;
-    font-weight: bold;
-    color: var(--primary-blue);
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .shift-header {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: var(--primary-blue);
+        margin-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-.shift-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 Columns */
-    gap: 8px;
-}
+    .shift-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 8px;
+    }
 
-/* Reuse existing .grid-slot styles, but ensure they fit well */
-.grid-slot {
-    padding: 8px;
-    text-align: center;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    border: 1px solid #ddd;
-    background: #fff;
-}
-.grid-slot.available { background: #e8f5e9; color: #155724; border-color: #c3e6cb; }
-.grid-slot.booked { background: #f1f3f5; color: #6c757d; border-color: #dee2e6; cursor: not-allowed; opacity: 0.8; }
-.empty-msg { grid-column: span 3; text-align: center; color: #999; font-size: 0.8rem; font-style: italic; padding: 10px; }
-</style>
+    /* Reuse .grid-slot styles */
+    .grid-slot {
+        padding: 8px;
+        text-align: center;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        border: 1px solid #ddd;
+        background: #fff;
+    }
+    .grid-slot.available { background: #e8f5e9; color: #155724; border-color: #c3e6cb; }
+    .grid-slot.booked { background: #f1f3f5; color: #6c757d; border-color: #dee2e6; cursor: not-allowed; opacity: 0.8; }
+    .empty-msg { grid-column: span 3; text-align: center; color: #999; font-size: 0.8rem; font-style: italic; padding: 10px; }
+    </style>
 </head>
 <body>
 
     <div class="dash-nav">
-        <div style="font-size: 1.2rem; font-weight: bold;"><i class="fas fa-desktop"></i> Reception Console</div>
-        <div>
-            <span><i class="fas fa-user-circle"></i> Logged in: Reception</span>
-            <a href="staff-login.html" style="color: white; margin-left: 20px;">Logout</a>
+        <div style="font-size: 1.2rem; font-weight: bold; white-space: nowrap;">
+            <i class="fas fa-desktop"></i> Reception Console
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span><i class="fas fa-user-circle"></i> <span class="hide-mobile">Logged in:</span> Reception</span>
+            
+            <button onclick="openSecurityModal()" style="background:#ffc107; color:#333; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">
+                <i class="fas fa-key"></i> Security
+            </button>
+            
+            <button onclick="logout()" style="background:#dc3545; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
         </div>
     </div>
 
     <div class="dash-container">
         
         <div>
-            
             <div class="card">
                 <h3><i class="fas fa-user-md"></i> Manage Doctors</h3>
                 <div style="background: #f9f9f9; padding: 12px; border-radius: 5px; margin-bottom: 15px; border: 1px solid #eee;">
@@ -171,29 +191,6 @@
                 <p style="font-size:0.85rem; color:#666; margin-bottom:15px;">Set shift timings and toggle availability.</p>
                 <div id="availabilityContainer"><p style="text-align:center; color:#999;">Loading...</p></div>
             </div>
-
-            <div class="card walkin-form">
-                <h3><i class="fas fa-plus-circle"></i> Add Walk-in</h3>
-                <form onsubmit="addWalkin(event)">
-                    <label>Patient Name</label> <input type="text" id="pName" class="input-std" required>
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
-                        <div><label>Phone</label> <input type="text" id="pPhone" class="input-std" required></div>
-                        <div><label>Age</label> <input type="number" id="pAge" class="input-std" required></div>
-                    </div>
-                    <label>Doctor</label> <select id="pDoctor" class="input-std"><option>Loading...</option></select>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <div><label>Date</label> <input type="date" id="pDate" class="input-std" required></div>
-                        <div><label>Slot</label>
-                            <select id="pTime" class="input-std">
-                                <option>10:00 AM</option><option>10:30 AM</option><option>11:00 AM</option>
-                                <option>12:00 PM</option><option>05:00 PM</option><option>06:00 PM</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-full" style="background:#28a745;">Confirm Booking</button>
-                </form>
-            </div>
-
         </div>
 
         <div>
@@ -222,11 +219,90 @@
                 </table>
                 <p id="noDataMsg" style="text-align:center; color:#999; margin-top:40px; display:none;">No appointments found.</p>
             </div>
+
+            <div class="card walkin-form">
+                <h3><i class="fas fa-plus-circle"></i> Add Walk-in</h3>
+                <form onsubmit="addWalkin(event)">
+                    <label>Patient Name</label> <input type="text" id="pName" class="input-std" required>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                        <div><label>Phone</label> <input type="text" id="pPhone" class="input-std" required></div>
+                        <div><label>Age</label> <input type="number" id="pAge" class="input-std" required></div>
+                    </div>
+                    <label>Doctor</label> <select id="pDoctor" class="input-std"><option>Loading...</option></select>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div><label>Date</label> <input type="date" id="pDate" class="input-std" required></div>
+                        <div><label>Slot</label>
+                            <select id="pTime" class="input-std">
+                                <option>10:00 AM</option><option>10:30 AM</option><option>11:00 AM</option>
+                                <option>12:00 PM</option><option>05:00 PM</option><option>06:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-full" style="background:#28a745;">Confirm Booking</button>
+                </form>
+            </div>
+
         </div>
 
     </div>
 
+    <div id="securityModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0; color:var(--primary-blue);">Security Center</h3>
+                <button onclick="closeSecurityModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-bottom:20px; border-bottom:1px solid #ddd;">
+                <button onclick="switchTab('tab-mine')" id="btn-tab-mine" class="tab-btn active-tab">My Password</button>
+                <button onclick="switchTab('tab-staff')" id="btn-tab-staff" class="tab-btn">Doctor Reset</button>
+            </div>
+
+            <div id="tab-mine" class="tab-content">
+                <form onsubmit="changeMyPassword(event)">
+                    <input type="password" id="oldPass" class="input-std" placeholder="Current Password" required>
+                    <input type="password" id="newPass" class="input-std" placeholder="New Password" required>
+                    <button type="submit" class="update-btn" style="width:100%;">Update Password</button>
+                </form>
+            </div>
+
+            <div id="tab-staff" class="tab-content" style="display:none;">
+                <p style="font-size:0.9rem; color:#666; margin-bottom:10px;">Select a Doctor to reset password:</p>
+                <select id="doctorResetDropdown" onchange="selectUserFromDropdown()" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px; margin-bottom:15px;">
+                    <option value="">-- Select Doctor --</option>
+                </select>
+                
+                <div id="resetZone" style="display:none; background:#f9f9f9; padding:15px; border-radius:5px; border:1px solid #eee;">
+                    <p style="margin:0 0 10px 0; font-weight:bold; color:#333;">Reset Password for: <span id="resetTargetName" style="color:#007bff;"></span></p>
+                    <input type="password" id="resetNewPass" placeholder="Enter New Password" style="width:100%; padding:8px; box-sizing:border-box; border:1px solid #ccc; border-radius:4px; margin-bottom:10px;">
+                    <button onclick="confirmReset()" style="background:#dc3545; color:white; border:none; padding:10px; width:100%; border-radius:5px; cursor:pointer;">Force Reset</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+    .modal-card { background: white; padding: 25px; border-radius: 10px; width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+    .tab-btn { background: none; border: none; padding: 10px; cursor: pointer; color: #666; border-bottom: 2px solid transparent; }
+    .active-tab { color: var(--primary-blue); border-bottom-color: var(--primary-blue); font-weight: bold; }
+</style>
+
     <script>
+    // --- 1. SECURITY CHECK (Must be at the top) ---
+    const token = localStorage.getItem('token');
+    
+    // If no token exists, kick user back to Login Page
+    if (!token) {
+        window.location.href = 'staff-login.html'; 
+    }
+
+    // --- 2. LOGOUT FUNCTION ---
+    function logout() {
+        localStorage.clear();
+        window.location.href = 'staff-login.html';
+    }
+
     const API_URL = "http://localhost:5000/api";
     const today = new Date().toISOString().split('T')[0];
     
@@ -239,7 +315,7 @@
     let allDoctors = []; 
 
     // ----------------------------------------------------
-    // 1. DOCTOR FETCH & SCHEDULE LOGIC (UPDATED FOR DUAL SHIFTS)
+    // 1. DOCTOR FETCH & SCHEDULE LOGIC
     // ----------------------------------------------------
     async function fetchDoctors() {
         try {
@@ -269,13 +345,12 @@
                         <button class="delete-btn" onclick="deleteDoctor('${doc._id}')"><i class="fas fa-trash"></i></button>
                     </div>`;
 
-                // Availability Card (DUAL SHIFT UPDATE)
+                // Availability Card
                 const isActive = doc.isAvailable;
                 const statusClass = isActive ? 'active' : 'inactive';
                 const checkedState = isActive ? 'checked' : '';
                 const statusLabel = isActive ? '<span style="color:green; font-weight:bold;">Available</span>' : '<span style="color:red; font-weight:bold;">Unavailable</span>';
 
-                // Defaults if fields are missing
                 const s1 = doc.startTime1 || "10:00";
                 const e1 = doc.endTime1 || "13:00";
                 const s2 = doc.startTime2 || "17:00";
@@ -313,10 +388,10 @@
         } catch (err) { console.error("Error loading doctors", err); }
     }
 
+    // THE SMART UPDATE FUNCTION
     async function updateSchedule(docId, isToggle) {
         const isAvailable = document.getElementById(`toggle-${docId}`).checked;
         
-        // Capture all 4 time inputs
         const startTime1 = document.getElementById(`start1-${docId}`).value;
         const endTime1 = document.getElementById(`end1-${docId}`).value;
         const startTime2 = document.getElementById(`start2-${docId}`).value;
@@ -336,53 +411,66 @@
 
         if(!isToggle) btn.innerText = "Saving...";
 
-        // Send all fields to Backend
-        await fetch(`${API_URL}/doctors/${docId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ isAvailable, startTime1, endTime1, startTime2, endTime2 })
-        });
+        try {
+            const res = await fetch(`${API_URL}/doctors/${docId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ isAvailable, startTime1, endTime1, startTime2, endTime2 })
+            });
 
-        if(!isToggle) {
-            btn.innerText = "Saved!";
-            setTimeout(() => btn.innerText = "Update Shifts", 2000);
+            const updatedDoc = await res.json(); 
+
+            // --- INSTANT UPDATE LOGIC ---
+            // 1. Update local memory so we don't need a refresh
+            const index = allDoctors.findIndex(d => d._id === docId);
+            if(index !== -1) {
+                allDoctors[index] = updatedDoc; 
+            }
+
+            // 2. If we are currently looking at this doctor's schedule, refresh the grid immediately
+            const currentViewDoc = document.getElementById('scheduleDocSelect').value;
+            if(currentViewDoc === updatedDoc.name) {
+                checkSchedule(); 
+            }
+
+            if(!isToggle) {
+                btn.innerText = "Saved!";
+                setTimeout(() => btn.innerText = "Update Shifts", 2000);
+            }
+        } catch (err) {
+            console.error(err);
+            if(!isToggle) btn.innerText = "Error";
         }
     }
 
     // ----------------------------------------------------
-    // 2. CHECK DOCTOR SCHEDULE (UPDATED FOR DUAL SHIFTS)
-    // ----------------------------------------------------
-    // ----------------------------------------------------
-    // 2. CHECK DOCTOR SCHEDULE (Updated: Split Sections)
+    // 2. CHECK DOCTOR SCHEDULE
     // ----------------------------------------------------
     async function checkSchedule() {
         const docName = document.getElementById('scheduleDocSelect').value;
         const date = document.getElementById('scheduleDate').value;
-        const gridContainer = document.getElementById('scheduleGrid'); // Ensure your HTML ID matches
+        const gridContainer = document.getElementById('scheduleGrid');
 
         if (!docName || !date) return;
 
         gridContainer.innerHTML = '<p style="text-align:center; padding:20px;">Loading schedule...</p>';
-        gridContainer.style.display = "block"; // Ensure container is visible
+        gridContainer.style.display = "block";
 
         const doctorObj = allDoctors.find(d => d.name === docName);
         if (!doctorObj) return;
 
         try {
-            // 1. Fetch Appointments
             const res = await fetch(`${API_URL}/appointments`);
             const allAppts = await res.json();
             
-            // 2. Map Booked Slots
             const bookings = allAppts.filter(a => a.date === date && a.doctor === docName);
             const bookedMap = {};
             bookings.forEach(b => bookedMap[b.timeSlot] = b.patientName); 
 
-            // 3. Generate Slots for Shifts
+            // Use the FRESH timings from doctorObj
             const morningSlots = createTimeSlots(doctorObj.startTime1 || "10:00", doctorObj.endTime1 || "13:00");
             const eveningSlots = createTimeSlots(doctorObj.startTime2 || "17:00", doctorObj.endTime2 || "21:00");
 
-            // 4. Render Helper Function
             const renderGridHTML = (slots) => {
                 if (slots.length === 0) return '<div class="empty-msg">No slots scheduled.</div>';
                 
@@ -402,7 +490,6 @@
                 }).join('');
             };
 
-            // 5. Inject HTML with 2 Sections
             gridContainer.innerHTML = `
                 <div class="shift-section">
                     <div class="shift-header"><i class="fas fa-sun"></i> Morning Shift</div>
@@ -410,7 +497,6 @@
                         ${renderGridHTML(morningSlots)}
                     </div>
                 </div>
-
                 <div class="shift-section">
                     <div class="shift-header"><i class="fas fa-moon"></i> Evening Shift</div>
                     <div class="shift-grid">
@@ -425,14 +511,13 @@
         }
     }
 
-    // Helper for Time Slots (15 min intervals to match frontend)
     function createTimeSlots(startStr, endStr) {
         const slots = [];
         let start = parseTime(startStr);
         let end = parseTime(endStr);
         while (start < end) {
             slots.push(minutesToTime(start));
-            start += 15; // Set to 15 mins to match client
+            start += 15; 
         }
         return slots;
     }
@@ -452,7 +537,7 @@
     }
 
     // ----------------------------------------------------
-    // 3. APPOINTMENT TABLE & WALKIN (Standard Logic)
+    // 3. APPOINTMENTS & OTHER LOGIC
     // ----------------------------------------------------
     async function loadAppointments() {
         const selectedDate = document.getElementById('viewDate').value;
@@ -464,7 +549,6 @@
             const allAppts = await res.json();
             let filtered = allAppts.filter(a => a.date === selectedDate);
             
-            // Sort by time
             filtered.sort((a, b) => parseTime(convert12to24(a.timeSlot)) - parseTime(convert12to24(b.timeSlot)));
 
             tableBody.innerHTML = "";
@@ -522,7 +606,6 @@
         const spec = document.getElementById('newDocSpec').value;
         if(!name || !spec) return alert("Fill Name & Spec");
         
-        // Updated Default Payload
         await fetch(`${API_URL}/doctors`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -551,6 +634,92 @@
     fetchDoctors();
     loadAppointments();
     setInterval(loadAppointments, 5000); 
-</script>
+
+    // --- SECURITY MODAL LOGIC (Automated) ---
+    let selectedUserId = null;
+
+    async function openSecurityModal() {
+        document.getElementById('securityModal').style.display = 'flex';
+        // Silent Sync
+        try { await fetch(`${API_URL}/sync-doctors`, { method: 'POST' }); } catch(e) {}
+        fetchDoctorsForSecurity(); 
+    }
+
+    function closeSecurityModal() {
+        document.getElementById('securityModal').style.display = 'none';
+        document.getElementById('resetZone').style.display = 'none';
+        const dropdown = document.getElementById('doctorResetDropdown');
+        if(dropdown) dropdown.value = ""; 
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active-tab'));
+        document.getElementById(tabId).style.display = 'block';
+        document.getElementById('btn-' + tabId).classList.add('active-tab');
+    }
+
+    async function fetchDoctorsForSecurity() {
+        try {
+            const res = await fetch(`${API_URL}/users`);
+            const users = await res.json();
+            const select = document.getElementById('doctorResetDropdown');
+            select.innerHTML = '<option value="">-- Select Doctor --</option>';
+            const doctors = users.filter(u => u.role === 'doctor');
+            doctors.forEach(u => {
+                const option = document.createElement('option');
+                option.value = u._id; 
+                option.text = u.username;
+                select.appendChild(option);
+            });
+        } catch (err) { console.error(err); }
+    }
+
+    function selectUserFromDropdown() {
+        const select = document.getElementById('doctorResetDropdown');
+        const userId = select.value;
+        const userName = select.options[select.selectedIndex].text;
+
+        if (userId) {
+            selectedUserId = userId;
+            document.getElementById('resetTargetName').innerText = userName;
+            document.getElementById('resetZone').style.display = 'block';
+        } else {
+            document.getElementById('resetZone').style.display = 'none';
+        }
+    }
+
+    async function changeMyPassword(e) {
+        e.preventDefault();
+        const oldPassword = document.getElementById('oldPass').value;
+        const newPassword = document.getElementById('newPass').value;
+        const username = localStorage.getItem('user'); 
+        const res = await fetch(`${API_URL}/change-password`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, oldPassword, newPassword })
+        });
+        const data = await res.json();
+        alert(data.message || data.error);
+        if(res.ok) e.target.reset();
+    }
+
+    async function confirmReset() {
+        const newPassword = document.getElementById('resetNewPass').value;
+        if(!newPassword) return alert("Enter a new password");
+        const res = await fetch(`${API_URL}/reset-password`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ targetUserId: selectedUserId, newPassword })
+        });
+        const data = await res.json();
+        alert(data.message || data.error);
+        if(res.ok) {
+            document.getElementById('resetNewPass').value = "";
+            document.getElementById('resetZone').style.display = 'none';
+            document.getElementById('doctorResetDropdown').value = "";
+        }
+    }
+    </script>
 </body>
 </html>

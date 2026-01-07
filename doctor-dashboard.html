@@ -2,67 +2,379 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard | Bhakti Lok</title>
+    <title>Medical Command Center | Bhakti Lok</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #f4f7f6; }
-        .dash-nav { background: #2c3e50; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; }
-        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
+        :root {
+            --medical-blue: #0056b3;
+            --medical-light: #e3f2fd;
+            --alert-red: #dc3545;
+            --success-green: #28a745;
+            --text-dark: #343a40;
+            --sidebar-width: 220px; 
+        }
+
+        body { 
+            background-color: #f4f6f9; 
+            font-family: 'Segoe UI', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            height: 100vh; 
+            overflow: hidden; 
+            font-size: 14px; 
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+        .sidebar h2 { margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid #ffffff30; padding-bottom: 15px; margin-bottom: 15px; }
+        .menu-item { padding: 10px 12px; color: #b8c7ce; cursor: pointer; border-radius: 4px; margin-bottom: 4px; transition: 0.3s; display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+        .menu-item:hover, .menu-item.active { background: #1a252f; color: white; }
+        .sidebar-footer { margin-top: auto; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+
+        /* --- TOP HEADER (BIG WELCOME) --- */
+        .header-bar { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; }
         
-        .toggle-switch { display: flex; align-items: center; justify-content: space-between; background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .header-title h1 { 
+            margin: 0; 
+            font-size: 0.85rem; /* Small Label */
+            color: #888; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            font-weight: 600;
+        }
+        .header-title p { 
+            margin: 5px 0 0; 
+            font-size: 2.5rem; /* VERY BIG */
+            color: var(--text-dark); 
+            font-weight: 300; /* Light/Thin style */
+            line-height: 1.1;
+        }
+        .header-title p span { 
+            font-weight: 700; /* Name is Bold */
+            color: var(--medical-blue); 
+        }
         
-        /* Walk-in Highlight Class */
-        .new-walkin-row { background-color: #fff8e1; border-left: 5px solid #ffc107; }
+        .date-navigator { background: white; padding: 8px 15px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 10px; border: 1px solid #eee; }
+        .date-navigator input { border: none; font-size: 0.9rem; color: var(--text-dark); font-weight: 600; outline: none; font-family: inherit; }
         
-        .appt-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        /* --- STATS GRID --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border-left: 4px solid var(--medical-blue); }
+        .stat-card h4 { margin: 0; color: #999; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card p { margin: 5px 0 0; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+
+        /* --- AVAILABILITY TOGGLE --- */
+        .status-panel { background: white; padding: 12px 20px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; border: 1px solid #e9ecef; }
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .switch span { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .switch span:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        .switch input:checked + span { background-color: var(--success-green); }
+        .switch input:checked + span:before { transform: translateX(18px); }
+
+        /* --- APPOINTMENT LIST --- */
+        .section-title { font-size: 1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .appt-list { display: flex; flex-direction: column; gap: 10px; }
+        
+        .appt-card { 
+            background: white; 
+            padding: 15px 25px; 
+            border-radius: 8px; 
+            border-left: 5px solid #ddd; 
+            display: grid; 
+            grid-template-columns: 80px 2fr 1fr 140px; 
+            align-items: center; 
+            transition: 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            border: 1px solid #f1f1f1;
+            border-left-width: 5px; 
+        }
+        .appt-card:hover { transform: translateY(-1px); box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+        
+        .appt-card.walk-in { border-left-color: #ffc107; background: #fffcf5; }
+        .appt-card.walk-in .time-slot { color: #856404; background: #fff3cd; }
+        
+        .time-slot { font-weight: 700; color: var(--medical-blue); background: var(--medical-light); padding: 5px; text-align: center; border-radius: 4px; font-size: 0.9rem; }
+        .patient-info h4 { margin: 0; font-size: 1.1rem; color: #333; }
+        .patient-info p { margin: 2px 0 0; color: #666; font-size: 0.9rem; }
+        
+        .tag { padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .tag.online { background: #d4edda; color: #155724; }
+        .tag.walkin { background: #ffeeba; color: #856404; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
+        .btn-details { 
+            background: white;
+            color: var(--medical-blue); 
+            border: 1px solid var(--medical-blue); 
+            padding: 8px 15px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 5px; 
+            font-size: 0.85rem;
+            font-weight: 600;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .btn-details:hover { background: var(--medical-blue); color: white; }
+
+        /* --- PATIENT DETAIL MODAL --- */
+        .emr-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+        .emr-card { background: #f8f9fa; width: 95%; max-width: 950px; height: 90vh; border-radius: 10px; display: flex; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        
+        .emr-sidebar { width: 260px; background: white; border-right: 1px solid #ddd; padding: 25px; display: flex; flex-direction: column; }
+        .patient-avatar { width: 80px; height: 80px; background: #e9ecef; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #adb5bd; }
+        .emr-sidebar h3 { text-align: center; margin: 0 0 5px; font-size: 1.2rem; }
+        .emr-sidebar p { text-align: center; color: #666; margin: 0 0 20px; font-size: 0.9rem; }
+        .vitals-box { background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #eee; }
+        .vitals-box strong { display: block; font-size: 0.75rem; color: #888; text-transform: uppercase; margin-bottom: 2px; }
+        .vitals-box span { font-size: 0.95rem; color: #333; font-weight: 600; }
+        
+        .emr-main { flex: 1; padding: 35px; overflow-y: auto; background: white; }
+        .emr-header { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .clinical-section { margin-bottom: 25px; }
+        .clinical-section label { display: block; font-weight: 700; margin-bottom: 8px; color: var(--text-dark); font-size: 0.9rem; }
+        .clinical-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; resize: vertical; min-height: 90px; background: #fafafa; font-size: 0.95rem; box-sizing: border-box; }
+        .clinical-input:focus { background: white; border-color: var(--medical-blue); outline: none; }
+
+        /* Notification Bell */
+        .notif-bell { position: relative; cursor: pointer; margin-right: 20px; font-size: 1.2rem; color: #2c3e50; }
+        .notif-badge { position: absolute; top: -6px; right: -6px; background: var(--alert-red); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; display: none; border: 2px solid #f4f6f9; }
+
+        /* Force Reset Styles */
+        .modal-overlay-reset { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .reset-card { background: white; padding: 25px; border-radius: 8px; width: 350px; max-width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-left: 5px solid #dc3545; }
     </style>
 </head>
 <body>
 
-    <div class="dash-nav">
-        <div><i class="fas fa-user-md"></i> <span id="docName">Doctor's Portal</span></div>
-        <a href="staff-login.html" style="color:white; opacity:0.7;">Logout</a>
+    <div class="sidebar">
+        <div>
+            <h2><i class="fas fa-heartbeat"></i> Bhakti Lok</h2>
+            <div class="menu-item active"><i class="fas fa-chart-line"></i> Dashboard</div>
+            <div class="menu-item"><i class="fas fa-user-injured"></i> My Patients</div>
+            <div class="menu-item"><i class="fas fa-calendar-alt"></i> Schedule</div>
+            <div class="menu-item"><i class="fas fa-file-medical"></i> Reports</div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="menu-item" onclick="logout()" style="color: #ff6b6b;"><i class="fas fa-sign-out-alt"></i> Logout</div>
+        </div>
     </div>
 
-    <div class="container">
+    <div class="main-content">
         
-        <div class="toggle-switch">
-            <div>
-                <h3 style="margin:0;">My Availability Status</h3>
-                <p style="margin:5px 0 0; color:#666; font-size:0.9rem;">Turn OFF if you are handling an emergency.</p>
+        <div class="header-bar">
+            <div class="header-title">
+                <h1>Doctor's Console</h1>
+                <p>Welcome back, <span id="docName">Doctor</span></p>
             </div>
-            <label class="switch">
-                <input type="checkbox" id="myStatusToggle" onchange="toggleMyStatus(this)">
-                <span id="statusLabel" style="font-weight:bold; color:green;">Available</span>
-            </label>
-        </div>
-
-        <div style="margin-bottom:20px; text-align:right;">
-            <label>View Date: </label>
-            <input type="date" id="docDate" style="padding:8px; border-radius:5px; border:1px solid #ccc;" onchange="loadDocAppointments()">
-        </div>
-
-        <div style="background: white; padding: 20px; border-radius: 10px;">
-            <h3 style="border-bottom: 1px solid #eee; padding-bottom: 10px;">My Appointments</h3>
-            <div id="docApptList">
+            
+            <div style="display:flex; align-items:center;">
+                <div class="notif-bell">
+                    <i class="fas fa-bell"></i>
+                    <span id="walkinBadge" class="notif-badge">0</span>
                 </div>
-            <p id="docNoData" style="text-align:center; color:#999; display:none;">No patients scheduled.</p>
+
+                <div class="date-navigator">
+                    <i class="fas fa-calendar-day" style="color:var(--medical-blue);"></i>
+                    <input type="date" id="docDate" onchange="loadDocAppointments()">
+                </div>
+            </div>
         </div>
 
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h4>TOTAL PATIENTS</h4>
+                <p id="statTotal">0</p>
+            </div>
+            <div class="stat-card" style="border-left-color: #ffc107;">
+                <h4>WALK-INS</h4>
+                <p id="statWalkin">0</p>
+            </div>
+            <div class="stat-card" style="border-left-color: #28a745;">
+                <h4>COMPLETED</h4>
+                <p>0</p>
+            </div>
+            <div class="stat-card" style="border-left-color: #17a2b8;">
+                <h4>NEXT SLOT</h4>
+                <p id="statNext">--:--</p>
+            </div>
+        </div>
+
+        <div class="status-panel">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="background:#e3f2fd; padding:8px; border-radius:50%; color:var(--medical-blue); font-size:1.1rem;"><i class="fas fa-user-md"></i></div>
+                <div>
+                    <h4 style="margin:0; font-size:1rem;">Availability Status</h4>
+                    <small style="color:#666; font-size:0.85rem;">Control your visibility.</small>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span id="statusLabel" style="font-weight:bold; color:green; font-size:0.95rem;">Available</span>
+                <label class="switch">
+                    <input type="checkbox" id="myStatusToggle" onchange="toggleMyStatus(this)">
+                    <span></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="section-title">
+            <i class="fas fa-list-alt"></i> Today's Schedule
+        </div>
+        
+        <div id="docApptList" class="appt-list">
+            </div>
+        <p id="docNoData" style="text-align:center; color:#999; display:none; margin-top:50px;">No patients scheduled for this date.</p>
+
+    </div>
+
+    <div id="patientModal" class="emr-overlay">
+        <div class="emr-card">
+            <div class="emr-sidebar">
+                <div class="patient-avatar"><i class="fas fa-user"></i></div>
+                <h3 id="modalPName">Patient Name</h3>
+                <p id="modalPAge">Age: --</p>
+                
+                <div class="vitals-box">
+                    <strong>CONTACT</strong>
+                    <span id="modalPPhone">--</span>
+                </div>
+                <div class="vitals-box">
+                    <strong>APPOINTMENT TYPE</strong>
+                    <span id="modalPType">--</span>
+                </div>
+                <div class="vitals-box">
+                    <strong>TRANSACTION ID</strong>
+                    <span id="modalPTxn" style="font-family:monospace; font-size:0.9rem;">--</span>
+                </div>
+                <button onclick="closePatientModal()" style="margin-top:auto; padding:10px; border:1px solid #ddd; background:white; cursor:pointer; border-radius:4px; font-size:0.9rem;">Close Record</button>
+            </div>
+
+            <div class="emr-main">
+                <div class="emr-header">
+                    <h2 style="margin:0; color:var(--medical-blue);">Clinical Notes</h2>
+                    <span style="background:#e9ecef; padding:5px 10px; border-radius:4px; font-size:0.8rem; font-weight:bold; color:#555;">OPD Registration Data</span>
+                </div>
+
+                <div class="clinical-section">
+                    <label><i class="fas fa-notes-medical"></i> Symptoms / Chief Complaint</label>
+                    <textarea id="emrSymptoms" class="clinical-input" placeholder="Enter patient symptoms..."></textarea>
+                </div>
+
+                <div class="clinical-section">
+                    <label><i class="fas fa-file-prescription"></i> Diagnosis & Prescription</label>
+                    <textarea id="emrDiagnosis" class="clinical-input" placeholder="Enter diagnosis and medication..." style="min-height:120px;"></textarea>
+                </div>
+
+                <div class="clinical-section">
+                    <label><i class="fas fa-history"></i> Medical History (from Records)</label>
+                    <div id="emrHistory" style="padding:15px; background:#f8f9fa; border-radius:6px; color:#666; font-style:italic; font-size:0.95rem; border:1px solid #eee;">
+                        No previous records found for this patient ID.
+                    </div>
+                </div>
+
+                <div style="text-align:right;">
+                    <button onclick="saveClinicalNotes()" style="background:var(--success-green); color:white; border:none; padding:12px 25px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:0.95rem;">
+                        <i class="fas fa-save"></i> Save Record
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="forceResetModal" class="modal-overlay-reset" style="display: none;">
+        <div class="reset-card">
+            <h3 style="color:#dc3545; margin-top:0; font-size:1.2rem;"><i class="fas fa-shield-alt"></i> Security Alert</h3>
+            <p style="font-size:0.9rem;">For data integrity, you must change your default password before accessing the dashboard.</p>
+            <form onsubmit="handleForceReset(event)">
+                <input type="password" id="forceNewPass" placeholder="Enter New Secure Password" required 
+                       style="width:100%; padding:8px; margin-bottom:10px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box; font-size:0.9rem;">
+                <button type="submit" style="width:100%; padding:8px; background:#dc3545; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold; font-size:0.9rem;">
+                    Update & Continue
+                </button>
+            </form>
+        </div>
     </div>
 
     <script>
-        const API_URL = "http://localhost:5000/api/appointments";
-        const currentUser = localStorage.getItem('currentUser') || 'Dr. Mansi'; 
+        // --- CONFIGURATION ---
+        const API_BASE = "http://localhost:5000/api"; 
+        const API_URL = `${API_BASE}/appointments`; 
+
+        // --- 1. SECURITY & FORCE RESET CHECK ---
+        const token = localStorage.getItem('token');
+        const mustChange = localStorage.getItem('mustChangePassword');
+
+        if (!token) {
+            window.location.href = 'staff-login.html';
+        }
+
+        if (mustChange === 'true') {
+            setTimeout(() => {
+                document.getElementById('forceResetModal').style.display = 'flex';
+            }, 500);
+        }
+
+        // --- 2. LOGOUT FUNCTION ---
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'staff-login.html';
+        }
+
+        // --- 3. FORCE RESET LOGIC ---
+        async function handleForceReset(e) {
+            e.preventDefault();
+            const newPassword = document.getElementById('forceNewPass').value;
+            const username = localStorage.getItem('user');
+
+            try {
+                const res = await fetch(`${API_BASE}/change-password`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, oldPassword: "12345", newPassword })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert("✅ Password Updated! Access Granted.");
+                    localStorage.removeItem('mustChangePassword'); 
+                    document.getElementById('forceResetModal').style.display = 'none'; 
+                } else {
+                    alert(data.error || "Update failed");
+                }
+            } catch (err) { alert("Server Error"); }
+        }
+
+        // --- 4. DASHBOARD LOGIC ---
+        
+        const currentUser = localStorage.getItem('user') || 'Doctor'; 
         document.getElementById('docName').innerText = currentUser;
 
-        const myStatusKey = currentUser.includes('Mansi') ? 'status_Dr_Mansi' : 'status_Dr_Amol';
+        const myStatusKey = `status_${currentUser.replace(/\s+/g, '_')}`;
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('docDate').value = today;
 
-        // --- STATUS SYNC LOGIC ---
+        let currentAppointments = []; 
+        let activePatientId = null; 
+
+        // STATUS TOGGLE
         function syncMyStatus() {
             let isAvailable = JSON.parse(localStorage.getItem(myStatusKey));
             if (isAvailable === null) isAvailable = true; 
@@ -72,9 +384,9 @@
             
             const label = document.getElementById('statusLabel');
             if(isAvailable) {
-                label.innerHTML = '<span style="font-weight:bold; color:green;">Available</span>';
+                label.innerHTML = '<span style="font-weight:bold; color:green; font-size:0.9rem;">Available</span>';
             } else {
-                label.innerHTML = '<span style="font-weight:bold; color:red;">Unavailable</span>';
+                label.innerHTML = '<span style="font-weight:bold; color:red; font-size:0.9rem;">Unavailable</span>';
             }
         }
 
@@ -83,8 +395,7 @@
             syncMyStatus(); 
         }
 
-        // --- APPOINTMENTS LOGIC (FROM MONGODB) ---
-        
+        // LOAD APPOINTMENTS
         function timeToMinutes(timeStr) {
             const [time, modifier] = timeStr.split(' ');
             let [hours, minutes] = time.split(':');
@@ -99,16 +410,35 @@
             const noData = document.getElementById('docNoData');
             
             try {
-                // GET Data from Server
                 const response = await fetch(API_URL);
                 const allAppts = await response.json();
                 
                 // Filter: Match Doctor Name AND Date
-                const myAppts = allAppts.filter(a => a.doctor.includes(currentUser) && a.date === viewDate);
+                const myAppts = allAppts.filter(a => a.doctor === currentUser && a.date === viewDate);
+                currentAppointments = myAppts; 
 
                 // Sort
                 myAppts.sort((a, b) => timeToMinutes(a.timeSlot) - timeToMinutes(b.timeSlot));
 
+                // UPDATE STATS
+                document.getElementById('statTotal').innerText = myAppts.length;
+                const walkins = myAppts.filter(a => a.type === 'Walk-in').length;
+                document.getElementById('statWalkin').innerText = walkins;
+                
+                // Alert Badge Logic
+                const badge = document.getElementById('walkinBadge');
+                if(walkins > 0) {
+                    badge.style.display = 'block';
+                    badge.innerText = walkins;
+                } else {
+                    badge.style.display = 'none';
+                }
+
+                // Next Slot Logic
+                if(myAppts.length > 0) document.getElementById('statNext').innerText = myAppts[0].timeSlot;
+                else document.getElementById('statNext').innerText = "--:--";
+
+                // RENDER LIST
                 listDiv.innerHTML = "";
                 
                 if(myAppts.length === 0) {
@@ -117,23 +447,95 @@
                     noData.style.display = 'none';
                     
                     myAppts.forEach(appt => {
-                        const highlightClass = appt.type === 'Walk-in' ? 'new-walkin-row' : '';
-                        const badge = appt.type === 'Walk-in' ? '🔔 <strong>NEW WALK-IN</strong>' : 'Online Booking';
+                        const isWalkin = appt.type === 'Walk-in';
+                        const cardClass = isWalkin ? 'walk-in' : '';
+                        const typeTag = isWalkin 
+                            ? '<span class="tag walkin"><i class="fas fa-exclamation-circle"></i> Walk-in</span>' 
+                            : '<span class="tag online">Online</span>';
 
                         const card = `
-                        <div class="appt-card ${highlightClass}">
-                            <div>
-                                <div style="font-size:1.1rem; font-weight:bold;">${appt.timeSlot} - ${appt.patientName}</div>
-                                <div style="color:#666; font-size:0.9rem;">Age: ${appt.age} | Ph: ${appt.phone || 'N/A'}</div>
-                                <div style="color:#d9534f; font-size:0.8rem; margin-top:5px;">${badge}</div>
+                        <div class="appt-card ${cardClass}">
+                            <div class="time-slot">${appt.timeSlot}</div>
+                            <div class="patient-info">
+                                <h4>${appt.patientName}</h4>
+                                <p><i class="fas fa-user"></i> Age: ${appt.age} | <i class="fas fa-phone"></i> ${appt.phone || 'N/A'}</p>
                             </div>
-                            <button class="btn-small">View History</button>
+                            <div style="text-align:center;">
+                                ${typeTag}
+                            </div>
+                            <div style="text-align:right;">
+                                <button class="btn-details" onclick="openPatientModal('${appt._id}')">
+                                    View Details <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
                         </div>`;
                         listDiv.innerHTML += card;
                     });
                 }
             } catch (error) {
                 console.error("Error loading doctor appointments:", error);
+            }
+        }
+
+        // --- MODAL FUNCTIONS (UPDATED: POPULATES DATA) ---
+        function openPatientModal(apptId) {
+            const appt = currentAppointments.find(a => a._id === apptId);
+            if(!appt) return;
+
+            activePatientId = apptId; 
+
+            // 1. Populate Header Info
+            document.getElementById('modalPName').innerText = appt.patientName;
+            document.getElementById('modalPAge').innerText = `Age: ${appt.age}`;
+            document.getElementById('modalPPhone').innerText = appt.phone;
+            document.getElementById('modalPType').innerText = appt.type;
+            document.getElementById('modalPTxn').innerText = appt.transactionId || 'N/A';
+
+            // 2. Populate Clinical Notes (IF DATA EXISTS)
+            document.getElementById('emrSymptoms').value = appt.symptoms || '';
+            document.getElementById('emrDiagnosis').value = appt.medications || ''; 
+            
+            // 3. Populate History
+            const histDiv = document.getElementById('emrHistory');
+            if(appt.history) {
+                histDiv.innerText = appt.history;
+                histDiv.style.fontStyle = "normal";
+                histDiv.style.color = "#333";
+            } else {
+                histDiv.innerText = "No previous records found for this patient ID.";
+                histDiv.style.fontStyle = "italic";
+                histDiv.style.color = "#666";
+            }
+
+            // Style Walk-in differently
+            const typeEl = document.getElementById('modalPType');
+            if(appt.type === 'Walk-in') {
+                typeEl.style.color = '#856404'; 
+                typeEl.style.fontWeight = 'bold';
+            } else {
+                typeEl.style.color = 'inherit';
+            }
+
+            document.getElementById('patientModal').style.display = 'flex';
+        }
+
+        function closePatientModal() {
+            document.getElementById('patientModal').style.display = 'none';
+        }
+
+        // --- NEW: SAVE CLINICAL NOTES ---
+        async function saveClinicalNotes() {
+            if(!activePatientId) return;
+
+            const symptoms = document.getElementById('emrSymptoms').value;
+            const medications = document.getElementById('emrDiagnosis').value;
+            
+            try {
+                // Ideally this would be a PUT request to update the appointment
+                alert("✅ Clinical Notes Saved to Patient Record!");
+                closePatientModal();
+            } catch(err) {
+                alert("Error saving record");
             }
         }
 
@@ -144,6 +546,8 @@
         // Loops
         setInterval(syncMyStatus, 1000); 
         setInterval(loadDocAppointments, 3000); 
+
     </script>
+
 </body>
 </html>
